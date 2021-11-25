@@ -1,0 +1,18 @@
+
+.textSubhead {
+	color: #FFFFFF;
+	font-size: 32rpx;
+}
+.paddingHor {
+	padding-left: 40rpx;
+	padding-right: 40rpx;
+}
+.imageOval {
+	border-radius: 50%; 
+	width: 136rpx; 
+	height: 136rpx; 
+	border-radius: 10rpx; 
+	border: #FFFFFF; 
+	background-color: #007AFF;
+}
+

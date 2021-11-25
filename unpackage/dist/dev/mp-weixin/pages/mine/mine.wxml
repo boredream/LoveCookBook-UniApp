@@ -1,0 +1,1 @@
+<view>{{''+user.username+''}}<button data-event-opts="{{[['tap',[['logout',['$event']]]]]}}" bindtap="__e">退出登录</button></view>
