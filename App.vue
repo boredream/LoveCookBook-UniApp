@@ -14,4 +14,8 @@
 
 <style>
 	/*每个页面公共css */
+	.textSubhead {
+		color: #FFFFFF;
+		font-size: 16px;
+	}
 </style>
