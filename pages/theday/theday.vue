@@ -1,20 +1,30 @@
 <template>
-	<view style="background-color: #FB6565;">
-		<view class="paddingHor" style="padding-top: 100rpx;">
+	<view style="display: flex; flex-direction: column;">
+		<!-- 头 -->
+		<view class="paddingHor" style="background-color: #FB6565; padding-top: 100rpx; padding-bottom: 100rpx;">
 			<view class="textSubhead">我们</view>
 			<view style="display: flex; justify-content: space-between; align-items: center;">
-				<view style=" margin-top: 20rpx; display: flex; align-items: center; ">
+				<view style="margin-top: 20rpx; display: flex; align-items: center; ">
 					<text style="font-size: 120rpx; color: #FFFFFF;">{{togatherDays}}</text>
 					<text class="textSubhead" style="margin-left: 8rpx; margin-top: 32rpx;">天</text>
 				</view>
-				<image class="imageOval" />
-				<text>123</text>
+				<view style="display: flex; flex-direction: row-reverse;">
+					<image class="imageOval" mode="aspectFill" style="margin-left: -24rpx;" src="https://img0.baidu.com/it/u=1787728239,1859405122&fm=26&fmt=auto" />
+					<image class="imageOval" mode="aspectFill" src="https://img0.baidu.com/it/u=1787728239,1859405122&fm=26&fmt=auto" />
+				</view>
 			</view>
 		</view>
-		<uni-calendar @monthSwitch="onMonthSwitch" @change="onDayChanged" :selected="theHintList"></uni-calendar>
-		<view @click="toDetail(item)" style="padding: 5px;" v-for="item in list">
-			<view>{{item.name}}</view>
+		
+		<view style="display: flex;">
+			<view style="background-color: #18B566; height: 50rpx;">123</view>
+			<view style="background-color: #be1035; height: 50rpx; flex: 1 1 0%;">456</view>
 		</view>
+		
+		<!-- 列表 -->
+		<view style="background-color: #18B566; border-radius: 44rpx; flex: 1 1 0%;">
+			content
+		</view>
+		
 		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
 			新增
 		</button>
@@ -111,13 +121,13 @@
 		padding-left: 40rpx;
 		padding-right: 40rpx;
 	}
-	
+
 	.imageOval {
-		border-radius: 50%; 
-		width: 136rpx; 
-		height: 136rpx; 
-		border-radius: 10rpx; 
-		border: #FFFFFF; 
-		background-color: #007AFF;
+		width: 136rpx;
+		height: 136rpx;
+		border-radius: 50%;
+		border-width: 6rpx;
+		border-color: #FFFFFF;
+		border-style: solid;
 	}
 </style>
