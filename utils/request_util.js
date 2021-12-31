@@ -1,44 +1,41 @@
 export default {
 	request,
 	get,
-	getPage,
 	post,
 	put,
 	del,
 }
 
-// const HOST = 'https://www.papikoala.cn/api/';
-const HOST = 'http://localhost:8080/api/';
+const HOST = 'https://www.papikoala.cn/api/';
+// const HOST = 'http://localhost:8080/api/';
 
-function get(path, onSuccess) {
-	request("GET", path, null, null, onSuccess);
-}
-
-function getPage(path, page, size, onSuccess) {
-	if (path.indexOf("?") >= 0) {
-		path += "&";
+function get(params) {
+	if (params.path.indexOf("?") >= 0) {
+		params.path += "&";
 	} else {
-		path += "?"
+		params.path += "?"
 	}
-	path = path + "page=" + page + "&size=" + size;
-	request("GET", path, null, null, onSuccess);
+	if ("page" in params && "size" in params) {
+		params.path = params.path + "page=" + params.page + "&size=" + params.size;
+	}
+	request("GET", params.path, null, null, params.onSuccess, params.onFail);
 }
 
-function post(path, data, onSuccess) {
-	request("POST", path, data, null, onSuccess);
+function post(params) {
+	request("POST", params.path, params.data, null, params.onSuccess, params.onFail);
 }
 
-function put(path, id, data, onSuccess) {
-	path = path + "/" + id;
-	request("PUT", path, data, null, onSuccess);
+function put(params) {
+	params.path = params.path + "/" + params.id;
+	request("PUT", params.path, params.data, null, params.onSuccess, params.onFail);
 }
 
-function del(path, id, onSuccess) {
-	var requestPath = path + "/" + id;
-	request("DELETE", requestPath, null, null, onSuccess);
+function del(params) {
+	params.path = params.path + "/" + params.id;
+	request("DELETE", params.path, null, null, params.onSuccess, params.onFail);
 }
 
-function request(method, path, data, extraHeader, onSuccess) {
+function request(method, path, data, extraHeader, onSuccess, onFail) {
 	var url = HOST + path;
 
 	uni.showLoading();
@@ -48,8 +45,15 @@ function request(method, path, data, extraHeader, onSuccess) {
 		header: getHeader(extraHeader),
 		data: data,
 		success: (res) => {
+			// http code error
+			if("status" in res && res.status != 200) {
+				defaultOnFail(res);
+				return;
+			}
+			
+			var data = res.data;
 			if (!res.data.success) {
-				onFail(res.data.code + ":" + res.data.msg);
+				defaultOnFail(res);
 				return;
 			}
 
@@ -67,7 +71,11 @@ function request(method, path, data, extraHeader, onSuccess) {
 		},
 		fail: (error) => {
 			console.log("request fail " + JSON.stringify(error));
-			onFail(error);
+			if(onFail != null) {
+				onFail(error);
+			} else {
+				defaultOnFail(error);
+			}
 		},
 		complete: () => {
 			uni.hideLoading();
@@ -88,8 +96,19 @@ function getHeader(extraHeader) {
 	return headers;
 }
 
-function onFail(error) {
-	uni.showToast({
-		title: error
-	})
+function defaultOnFail(error) {
+	if(error.data.status >= 400 && error.data.status < 500) {
+		// token
+		uni.showToast({
+			title: "登录已过期"
+		});
+		uni.navigateTo({
+			url: "/pages/login/login",
+		});
+		return;
+	}
+	
+	// uni.showToast({
+	// 	title: JSON.stringify(error)
+	// })
 }

@@ -8,14 +8,15 @@
 </template>
 
 <script>
-	import request from "../../utils/request_util.js";
+	import tokenKeeper from "../../utils/token_keeper.js"
+	import userKeeper from "../../utils/user_keeper.js"
 	export default {
 		data() {
 			return {};
 		},
 		onLoad(option) {
 			// 自动登录
-			var token = uni.getStorageSync("token");
+			var token = tokenKeeper.get();
 			if (token != null && token.length > 0) {
 				this.getUserInfo();
 			} else {
@@ -35,13 +36,13 @@
 			},
 			getUserInfo() {
 				console.log("获取用户信息，完成登录流程，跳转页面");
-				request.get("user/info", (res) => {
-					console.log("auto login success " + JSON.stringify(res));
-					uni.setStorage({
-						key: "user",
-						data: res
-					});
-					this.route2main();
+				this.$request.get({
+					path: "user/info",
+					onSuccess: (res) => {
+						console.log("auto login success " + JSON.stringify(res));
+						userKeeper.save(res);
+						this.route2main();
+					}
 				});
 			},
 			appLoginWx() {
@@ -50,9 +51,9 @@
 					provider: 'weixin',
 					success: (authCode) => {
 						console.log("通过code获取微信openId，并完成登录/注册，最终生成token " + authCode);
-						request.post("user/wxlogin", authCode, (token) => {
+						this.$request.post("user/wxlogin", authCode, (token) => {
 							console.log("wx login success = " + token);
-							uni.setStorageSync("token", token);
+							token.save(token);
 							this.getUserInfo();
 						});
 					},
@@ -69,29 +70,4 @@
 </script>
 
 <style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50rpx;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
-	}
 </style>

@@ -19,3 +19,9 @@ export function createApp() {
   }
 }
 // #endif
+
+import stringUtil from './utils/string_util.js'
+import requestUtil from './utils/request_util.js'
+Vue.prototype.$stringUtil = stringUtil
+Vue.prototype.$request = requestUtil
+

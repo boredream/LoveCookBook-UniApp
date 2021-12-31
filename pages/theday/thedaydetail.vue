@@ -1,27 +1,32 @@
 <template>
-	<view class="container">
-		<input v-model="info.name" class="title-input" placeholder="标题" />
-		<textarea placeholder="详细描述..." :auto-height="true" maxlength="-1" v-model="info.detail"
-			class="post-txt"></textarea>
-		<view @click="showTheDayDate = true">记录日期：{{info.theDayDate != null ? info.theDayDate : ""}}</view>
-		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate != null ? info.notifyDate : ""}}</view>
-		<u-upload ref="uUpload" :size-type="['compressed']" :max-count="9" :auto-upload="false"
-			:file-list="exsitImageList"></u-upload>
-		<u-picker :default-time="info.theDayDate != null ? info.theDayDate : ''" @confirm="onTheDayDateSelected"
-			mode="time" v-model="showTheDayDate">
+	<view class="paddingHor">
+		{{this.showTheDayDate}}
+		<input v-model="info.name" class="title-input" placeholder="请输入名字" />
+		<view @click="showTheDayDate = true" style="display: flex; align-items: center; height: 92rpx;">
+			<text class="textSubhead" style="flex-grow: 1;">日期</text>
+			<text class="textBody">{{this.$stringUtil.getStrWithDef(info.theDayDate, '')}}</text>
+			<image style="margin-left: 16rpx;" class="icon" src="../../static/ic_right_arrow.png" />
+		</view>
+		<view @click="" style="display: flex; align-items: center; height: 92rpx;">
+			<text class="textSubhead" style="flex-grow: 1;">显示方式</text>
+			<text class="textBody">{{notifyType}}</text>
+			<image style="margin-left: 16rpx;" class="icon" src="../../static/ic_right_arrow.png" />
+		</view>
+		<u-picker :default-time="this.$stringUtil.getStrWithDef(info.theDayDate, '')" @confirm="onTheDayDateSelected"
+			mode="time">
 		</u-picker>
-		<u-picker :default-time="info.notifyDate != null ? info.notifyDate : ''" @confirm="onNotifyDateSelected"
-			mode="time" v-model="showNotifyDate">
-		</u-picker>
-		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
+		<button class="btnPrimary" style="margin-top: 316rpx;" @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
 		<button v-if="isEdit" @click="deleteData">删除</button>
+
+		<picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
+			<view class="uni-input">{{date}}</view>
+		</picker>
 	</view>
 </template>
 
 <script>
-	import request from "../../utils/request_util.js";
 	import imageUploadUtil from "../../utils/image_upload_util.js";
-	
+
 	export default {
 		onLoad(options) {
 			if (options.date != null) {
@@ -35,14 +40,21 @@
 			}
 		},
 		data() {
+			const currentDate = this.getDate({
+				format: true
+			})
 			return {
 				isEdit: false,
 				showTheDayDate: false,
-				showNotifyDate: false,
 				info: {},
+				date: currentDate,
 			}
 		},
 		computed: {
+			notifyType() {
+				var type = this.$stringUtil.getStrWithDef(this.info.notifyType, 0);
+				return type == 1 ? '每年倒数' : '累计天数';
+			},
 			exsitImageList() {
 				var images = this.info.images;
 				var exsitImageList = [];
@@ -57,109 +69,39 @@
 			}
 		},
 		methods: {
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
 			onTheDayDateSelected(params) {
 				this.info.theDayDate = params.year + '-' + params.month + '-' + params.day
 			},
-			onNotifyDateSelected(params) {
-				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
-			},
 			commitData() {
-				// 如果有本地图片，则先进行上传
-				uni.showLoading();
-				imageUploadUtil.check4upload(this.$refs.uUpload.lists).then((imageUrls) => {
-					this.info.images = imageUrls;
-				
-					// 上传成功后发送请求
-					if (this.isEdit) {
-						request.put("the_day", this.info.id, this.info, "修改成功");
-					} else {
-						request.post("the_day", this.info, "新增成功");
-					}
-				}).catch((error) => {
-					uni.hideLoading();
-					uni.showToast({
-						title: "图片上传失败，请重新提交"
-					});
-				});
+				if (this.isEdit) {
+					this.$request.put("the_day", this.info.id, this.info, "修改成功");
+				} else {
+					this.$request.post("the_day", this.info, "新增成功");
+				}
 			},
 			deleteData() {
-				request.del("the_day", this.info.id, "删除成功");
+				this.$request.del("the_day", this.info.id, "删除成功");
 			},
 		}
 	};
 </script>
 
 
-<style lang="scss" scoped>
-	.title-input {
-		border-bottom: 1px solid #F5F5F5;
-		margin: 20rpx 0;
-		padding: 20rpx 0;
-	}
+<style>
 
-	.post-txt {
-		width: 100%;
-		padding: 20rpx 0;
-		min-height: 200rpx;
-	}
-
-	.upload-wrap {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		width: 180rpx;
-		height: 180rpx;
-		background-color: #F5F5F5;
-		margin-top: 30rpx;
-		border-radius: 10rpx;
-
-		.icon {
-			width: 50rpx;
-			height: 50rpx;
-		}
-
-		text {
-			font-size: 24rpx;
-		}
-	}
-
-	.upload-video {
-		width: 180rpx;
-		height: 180rpx;
-		margin-top: 30rpx;
-	}
-
-	.choose-item {
-		display: flex;
-		align-items: center;
-		padding: 20rpx;
-		border-bottom: 1px solid #F5F5F5;
-
-		&:last-child {
-			border: 0;
-		}
-
-		.txt {
-			margin-left: 20rpx;
-		}
-
-		.icon {
-			width: 40rpx;
-			height: 40rpx;
-		}
-
-		.u-icon {
-			margin-left: auto;
-			color: #999;
-		}
-
-		.add-icon {
-			margin-left: 0;
-		}
-	}
-
-	.submit-btn {
-		margin-top: 50rpx;
-	}
 </style>
