@@ -9,6 +9,16 @@ export default {
 const HOST = 'https://www.papikoala.cn/api/';
 // const HOST = 'http://localhost:8080/api/';
 
+import tokenUtil from "./token_keeper.js"
+
+/**
+ * @param {Object} params
+ * @param {string} params.path
+ * @param {int} params.page
+ * @param {int} params.size
+ * @param params.onSuccess
+ * @param {function} params.onFail
+ */
 function get(params) {
 	if (params.path.indexOf("?") >= 0) {
 		params.path += "&";
@@ -21,15 +31,37 @@ function get(params) {
 	request("GET", params.path, null, null, params.onSuccess, params.onFail);
 }
 
+/**
+ * @param {Object} params
+ * @param {string} params.path
+ * @param {Object} params.data
+ * @param params.onSuccess
+ * @param {function} params.onFail
+ */
 function post(params) {
 	request("POST", params.path, params.data, null, params.onSuccess, params.onFail);
 }
 
+/**
+ * @param {Object} params
+ * @param {string} params.path
+ * @param {string} params.id
+ * @param {Object} params.data
+ * @param params.onSuccess
+ * @param {function} params.onFail
+ */
 function put(params) {
 	params.path = params.path + "/" + params.id;
 	request("PUT", params.path, params.data, null, params.onSuccess, params.onFail);
 }
 
+/**
+ * @param {Object} params
+ * @param {string} params.path
+ * @param {string} params.id
+ * @param params.onSuccess
+ * @param {function} params.onFail
+ */
 function del(params) {
 	params.path = params.path + "/" + params.id;
 	request("DELETE", params.path, null, null, params.onSuccess, params.onFail);
@@ -46,11 +78,11 @@ function request(method, path, data, extraHeader, onSuccess, onFail) {
 		data: data,
 		success: (res) => {
 			// http code error
-			if("status" in res && res.status != 200) {
+			if ("status" in res && res.status != 200) {
 				defaultOnFail(res);
 				return;
 			}
-			
+
 			var data = res.data;
 			if (!res.data.success) {
 				defaultOnFail(res);
@@ -71,7 +103,7 @@ function request(method, path, data, extraHeader, onSuccess, onFail) {
 		},
 		fail: (error) => {
 			console.log("request fail " + JSON.stringify(error));
-			if(onFail != null) {
+			if (onFail != null) {
 				onFail(error);
 			} else {
 				defaultOnFail(error);
@@ -88,16 +120,15 @@ function getHeader(extraHeader) {
 	if (extraHeader != null) {
 		headers = extraHeader;
 	}
-	var token = uni.getStorageSync("token");
+	var token = tokenUtil.get();
 	if (token != null && token.length > 0) {
 		headers["token"] = token;
 	}
-	// console.log("getHeader: " + JSON.stringify(headers));
 	return headers;
 }
 
 function defaultOnFail(error) {
-	if(error.data.status >= 400 && error.data.status < 500) {
+	if (error.data.status >= 400 && error.data.status < 500) {
 		// token
 		uni.showToast({
 			title: "登录已过期"
@@ -107,7 +138,7 @@ function defaultOnFail(error) {
 		});
 		return;
 	}
-	
+
 	// uni.showToast({
 	// 	title: JSON.stringify(error)
 	// })

@@ -5,7 +5,7 @@ export default {
 }
 
 function get(storageKey) {
-	return uni.getStorageInfoSync(storageKey);
+	return uni.getStorageSync(storageKey);
 }
 
 function save(storageKey, info) {
