@@ -1,20 +1,34 @@
 {
+	 "easycom": {
+	        // npm安装的方式不需要前面的"@/"，下载安装的方式需要"@/"
+	        // npm安装方式
+	        // "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	        // 下载安装方式
+	        "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	    },
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
+		"color": "#666666",
+		"selectedColor": "#ff6a6c",
 		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
 		"list": [{
 			"pagePath": "pages/theday/theday",
+			"iconPath":"static/ic_the_day.png",
+			"selectedIconPath":"static/ic_the_day_checked.png",
 			"text": "纪念日"
 		}, {
 			"pagePath": "pages/diary/diary",
+			"iconPath":"static/ic_diary.png",
+			"selectedIconPath":"static/ic_diary_checked.png",
 			"text": "日记"
 		}, {
 			"pagePath": "pages/todo/todo",
+			"iconPath":"static/ic_todo.png",
+			"selectedIconPath":"static/ic_todo_checked.png",
 			"text": "清单"
 		}, {
 			"pagePath": "pages/mine/mine",
+			"iconPath":"static/ic_mine.png",
+			"selectedIconPath":"static/ic_mine_checked.png",
 			"text": "我的"
 		}]
 	},

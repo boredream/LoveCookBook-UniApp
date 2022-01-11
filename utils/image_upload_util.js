@@ -14,8 +14,8 @@ async function check4upload(imageList) {
 	var localImageList = [];
 	for (let i in imageList) {
 		var image = imageList[i];
-		if (image.file != null) {
-			localImageList.push(image.file.path);
+		if (image.thumb != null) {
+			localImageList.push(image.thumb);
 		}
 	}
 	
@@ -23,6 +23,7 @@ async function check4upload(imageList) {
 	if(localImageList.length != 0) {
 		// 先获取上传凭证
 		var policy = await getUploadPolicy();
+		// console.log("get upload image policy = " + policy);
 		
 		// 图片挨个上传
 		uni.showLoading({
@@ -30,13 +31,13 @@ async function check4upload(imageList) {
 		});
 		for (let i in localImageList) {
 			var path = localImageList[i];
-			// console.log("start upload localImag = " + path);
 			var imageUrl = await uploadImage(policy, path);
+			// console.log("upload success " + path + " => to url " + imageUrl);
 			// TODO 部分上传成功后咋处理？
 			// 上传成功后替换原有图片，并清除path路径
 			for (let j in imageList) {
 				var image = imageList[j];
-				if (image.file != null && image.file.path == path) {
+				if (image.thumb != null && image.thumb == path) {
 					image.url = imageUrl;
 				}
 			}
@@ -64,8 +65,11 @@ async function check4upload(imageList) {
 
 function getUploadPolicy() {
 	return new Promise(function(resolve, reject) {
-		request.get("file/getUploadPolicy", (res) => {
-			resolve(res);
+		request.get({
+			path: "file/getUploadPolicy",
+			onSuccess: (res) => {
+				resolve(res);
+			}
 		});
 	});
 }
@@ -90,7 +94,7 @@ function uploadImage(policy, filePath) {
 			complete: (res) => {
 				if (res.statusCode === 200) {
 					const imageUrl = policy.downloadHost + JSON.parse(res.data).key;
-					console.log("upload success " + imageUrl);
+					// console.log("upload success " + imageUrl);
 					resolve(imageUrl);
 				} else {
 					reject("image upload error " + res.message)

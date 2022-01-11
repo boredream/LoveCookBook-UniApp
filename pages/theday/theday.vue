@@ -17,11 +17,8 @@
 
 		<!-- 列表 -->
 		<view style="background-color: #18B566; border-radius: 44rpx; height: max-content; flex: 1 1 0%;">
-			<u-list>
-
-			</u-list>
 		</view>
-
+		
 		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
 			新增
 		</button>

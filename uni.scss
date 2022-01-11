@@ -1,3 +1,5 @@
+@import "uview-ui/theme.scss";
+
 /* 页面左右间距 */
 $page-hor-spacing: 16upx;
 $page-ver-spacing: 12upx;
@@ -22,7 +24,7 @@ $font-color-disabled: #C0C4CC;
 /* 颜色变量 */
 
 /* 行为相关颜色 */
-$uni-color-primary: #007aff;
+$uni-color-primary: #ff6a6c;
 $uni-color-success: #4cd964;
 $uni-color-warning: #f0ad4e;
 $uni-color-error: #dd524d;
