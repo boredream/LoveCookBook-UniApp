@@ -1,7 +1,6 @@
 export default {
 	save,
-	get,
-	clear,
+	get
 }
 
 import localStorageUtil from "./local_storage_util.js"
@@ -16,6 +15,6 @@ function save(info) {
 	localStorageUtil.save(storageKey, info);
 }
 
-function clear() {
+export function clear() {
 	localStorageUtil.clear(storageKey);
 }

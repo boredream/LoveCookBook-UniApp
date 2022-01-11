@@ -39,7 +39,13 @@
 		}, {
 			"path": "pages/diary/diary",
 			"style": {
-				"navigationBarTitleText": "日记"
+				"navigationBarTitleText": "日记",
+				"enablePullDownRefresh": true
+			}
+		}, {
+			"path": "pages/diary/diarydetail",
+			"style": {
+				"navigationBarTitleText": "日记详情"
 			}
 		}, {
 			"path": "pages/todo/todo",
@@ -63,7 +69,7 @@
 			}
 
 		}
-	],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "手册",

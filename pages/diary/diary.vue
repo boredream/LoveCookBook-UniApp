@@ -1,100 +1,66 @@
 <template>
 	<view>
-		<view>{{test}}</view>
-		<uni-calendar @monthSwitch="onMonthSwitch" @change="onDayChanged" :selected="theHintList"></uni-calendar>
-		<view @click="toDetail(item)" style="padding: 5px;" v-for="item in list">
-			<view>{{item.name}}</view>
+		<uni-fab horizontal="right" vertical="bottom" @fabClick="add"></uni-fab>
+
+		<view style="padding: 5px;" v-for="item in list">
+			<span @click="toDetail(item)">[{{item.diaryDate}}] {{item.content}}</span>
 		</view>
-		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
-			新增
-		</button>
 	</view>
 </template>
 
 <script>
-	import dateUtil from "../../utils/date_util.js";
-
 	export default {
-		onLoad() {
-			var today = new Date();
-			this.curYearMonth = dateUtil.date2str(today, "yyyy-MM");
-			this.curDate = dateUtil.date2str(today, "yyyy-MM-dd");
-			this.loadData();
-		},
 		data() {
 			return {
-				test: "",
-				curYearMonth: "",
-				show: true,
-				theHintList: [],
-				yearMonthMap: {},
-				list: [],
-			}
+				curPage: 1,
+				list: []
+			};
+		},
+		onLoad() {
+			this.loadData(false);
 		},
 		methods: {
-			onDayChanged(calendar) {
-				this.curDate = calendar.fulldate;
-				this.showDayList();
-			},
-			onMonthSwitch(calendar) {
-				var yearMonth = calendar.year + "-";
-				if (calendar.month < 10) {
-					yearMonth += "0";
-				}
-				yearMonth += calendar.month;
-				this.curYearMonth = yearMonth;
-
-				// 先尝试从缓存取，取不到再请求
-				if (this.yearMonthMap[this.curYearMonth] != null) {
-					this.showDayList();
-				} else {
-					this.loadData();
-				}
-			},
-			loadData() {
-				this.$request.get({
-					path: "the_day/page?queryDate=" + this.curYearMonth,
-					page: 1,
-					size: 100,
-					onSuccess: (res) => {
-						// 记录 x年x月 下所有数据
-						var records = this.yearMonthMap[this.curYearMonth] = res.records;
-						
-						// 记录 x年x月 下所有日期红点提示
-						for (var index in records) {
-							this.theHintList.push({
-								date: records[index].theDayDate
-							});
-						}
-						
-						this.showDayList();
-					}
-				});
-			},
-			showDayList() {
-				// 过滤当日数据列表
-				var records = this.yearMonthMap[this.curYearMonth];
-				this.list = [];
-				for (var index in records) {
-					if (this.curDate == records[index].theDayDate) {
-						this.list.push(records[index]);
-					}
-				}
-			},
 			add() {
 				uni.navigateTo({
-					url: "../theDayDetail/theDayDetail?date=" + this.curDate,
+					url: "../diary/diarydetail",
 				})
 			},
 			toDetail(item) {
 				uni.navigateTo({
-					url: "../theDayDetail/theDayDetail?data=" + JSON.stringify(item),
+					url: "../diary/diarydetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})
 			},
+			loadData(loadMore) {
+				var requestPage = loadMore ? this.curPage + 1 : 1;
+				this.$request.get({
+					path: "diary/page",
+					page: requestPage,
+					size: 20,
+					onSuccess: (res) => {
+						if (loadMore) {
+							this.list.push(...res.records);
+						} else {
+							this.list = res.records;
+						}
+						this.curPage = requestPage;
+					}
+				});
+			}
+		},
+		/**
+		 * 下拉刷新回调函数
+		 */
+		onPullDownRefresh() {
+			this.loadData(false);
+		},
+		/**
+		 * 上拉加载回调函数
+		 */
+		onReachBottom() {
+			this.loadData(true);
 		}
-	}
+	};
 </script>
 
 <style>
-
 </style>
