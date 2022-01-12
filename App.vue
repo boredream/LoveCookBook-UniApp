@@ -26,31 +26,53 @@
 	}
 	
 	.textSubhead {
-		color: #333333;
+		color: $font-color-black;
 		font-size: $font-subhead;
 	}
 	
 	.textBody {
-		color: #333333;
+		color: $font-color-gray;
 		font-size: $font-body;
 	}
 	
 	.textCaption {
-		color: #999999;
+		color: $font-color-gray-light;
 		font-size: $font-caption;
 	}
 	
 	.btnPrimary {
-		background-color: #FB6565;
+		background-color: $primary-color;
 		font-size: $font-subhead;
 		height: 44px;
 		border-radius: 22px;
 		color: #FFFFFF;
 	}
 	
+	.btnPrimaryStroke {
+		background-color: #FFFFFF;
+		font-size: $font-subhead;
+		height: 44px;
+		border-radius: 22px;
+		border-style: solid;
+		border-color: $primary-color;
+		border-width: 1px;
+		color: $primary-color;
+	}
+	
+	.dividerHor {
+		height: 0.5px;
+		background-color: #000000;
+		opacity: 0.1;
+	}
+	
 	.paddingHor {
 		padding-left: 20px;
 		padding-right: 20px;
+	}
+	
+	.marginHor {
+		margin-left: 20px;
+		margin-right: 20px;
 	}
 	
 	.icon {

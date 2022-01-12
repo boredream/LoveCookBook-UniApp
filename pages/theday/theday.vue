@@ -34,6 +34,16 @@
 				</view>
 			</view>
 		</view>
+		
+		<u-datetime-picker
+			:show="showDate" 
+			mode="date" 
+			v-model="togatherDate"
+			closeOnClickOverlay
+			@confirm="confirm"
+			@cancel="cancel">
+		</u-datetime-picker>
+		
 	</view>
 </template>
 
@@ -48,8 +58,10 @@
 		},
 		data() {
 			return {
+				showDate: false,
 				togatherTitle: "",
-				togatherDays: "100",
+				togatherDays: "1",
+				togatherDate: Number(new Date()),
 				user: {},
 				cpUser: {},
 				cpUserAvatar: "",
@@ -69,15 +81,39 @@
 				this.setTogetherDays();
 			},
 			setTogetherDays() {
-				var bothTogetherDate = this.user.bothTogetherDate;
-				if (bothTogetherDate != null) {
+				var cpTogetherDate = this.user.cpTogetherDate;
+				if (cpTogetherDate != null) {
 					this.togatherTitle = "我们已恋爱";
-					var days = dateUtil.calculateDayDiff(time.now(), dateUtil.str2date(bothTogetherDate));
+					var date = dateUtil.str2date(cpTogetherDate);
+					var days = dateUtil.calculateDayDiff(new Date(), date);
 					this.togatherDays = days.toString();
+					this.togatherDate = Number(date);
 				} else {
 					this.togatherTitle = "点我设置时间";
 					this.togatherDays = "1";
 				}
+			},
+			confirm(params) {
+				var date = uni.$u.timeFormat(params.value, 'yyyy-mm-dd');
+				this.$request.put({
+					path: "user",
+					id: this.user.id,
+					data: {
+						"cpTogetherDate": date
+					},
+					onSuccess: (res) => {
+						this.user.cpTogetherDate = date;
+						userKeeper.save(this.user);
+						this.setTogetherDays();
+						this.showDate = false;
+						uni.showToast({
+							title: "设置成功"
+						});
+					}
+				});
+			},
+			cancel() {
+				this.showDate = false;
 			},
 			getNotifyPre(item) {
 				return item.notifyType == getApp().globalData.NOTIFY_TYPE_TOTAL_COUNT ?
@@ -100,7 +136,7 @@
 				}
 			},
 			pickTogetherDays() {
-
+				this.showDate = true;
 			},
 			loadData() {
 				this.$request.get({
@@ -126,7 +162,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.header {
 		background-color: $primary-color;
 		padding-top: 50px;

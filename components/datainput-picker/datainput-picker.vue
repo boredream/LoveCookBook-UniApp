@@ -6,6 +6,7 @@
 			<view class="textCaption input-value">{{initValue}}</view>
 			<image class="input-image" src="../../static/ic_right_arrow.png"></image>
 		</view>
+		<view class="dividerHor" style="margin-left: 16px;"></view>
 	</view>
 </template>
 
