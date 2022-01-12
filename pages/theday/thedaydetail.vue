@@ -1,11 +1,7 @@
 <template>
 	<view class="container">
 		<input v-model="info.name" class="title-input" placeholder="请输入名字" />
-		<view class="input-picker" @click="showDate = true">
-			<view class="textBody" style="color: #666666;">日期</view>
-			<view class="textCaption" >{{info.theDayDate ? info.theDayDate : ""}}</view>
-			<image src="../../static/ic_right_arrow.png"></image>
-		</view>
+		<datainput-picker name="日期" @onDateSelected="onDateSelected"></datainput-picker>
 		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
 		<button v-if="isEdit" @click="deleteData">删除</button>
 	</view>

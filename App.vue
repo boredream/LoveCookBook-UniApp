@@ -57,20 +57,5 @@
 		width: 24px;
 		height: 24px;
 	}
-	
-	.input-picker {
-		height: 46px;
-		display: flex;
-		padding-left: 20px;
-		padding-right: 20px;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-	}
-	
-	.input-picker image {
-		width: 6px;
-		height: 10px;
-		
-	}
+
 </style>
