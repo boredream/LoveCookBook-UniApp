@@ -3,7 +3,7 @@ export default {
 	get,
 	post,
 	put,
-	del,
+	del
 }
 
 const HOST = 'https://www.papikoala.cn/api/';

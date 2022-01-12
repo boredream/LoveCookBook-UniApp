@@ -31,7 +31,7 @@
 			},
 			route2main() {
 				uni.switchTab({
-					url: "../diary/diary",
+					url: "../theday/theday",
 				});
 			},
 			getUserInfo() {

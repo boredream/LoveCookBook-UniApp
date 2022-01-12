@@ -7,7 +7,7 @@ export default {
 function calculateDayDiff(date1, date2) {
 	var diff = date1.getTime() - date2.getTime();
 	var dayDiff = diff / (1000 * 3600 * 24);
-	return dayDiff;
+	return Math.round(dayDiff);
 }
 
 function str2date(str) {

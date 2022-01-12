@@ -2,8 +2,18 @@
 	<view class="container">
 		<textarea style="padding: 24rpx;" placeholder="详细描述..." :auto-height="true" maxlength="-1"
 			v-model="info.content" class="post-txt"></textarea>
-		<u-upload @delete="deletePic" sizeType="['compressed']" maxCount="9" :fileList="imageList" @afterRead="afterRead" ></u-upload>
-		<uni-datetime-picker type="date" :value="info.diaryDate ? info.diaryDate : ''" @change="onDiaryDateSelected" />
+		<u-upload @delete="deletePic" sizeType="['compressed']" maxCount="9" :fileList="imageList"
+			@afterRead="afterRead"></u-upload>
+		<view class="input-picker" @click="showDate = true">
+			{{info.diaryDate ? info.diaryDate : ""}}
+		</view>
+		<u-datetime-picker 
+			:show="showDate" 
+			mode="date" 
+			closeOnClickOverlay="true"
+			@confirm="onDateSelected"
+			@cancel="closeDatePicker">
+		</u-datetime-picker>
 		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
 		<button v-if="isEdit" @click="deleteData">删除</button>
 	</view>
@@ -11,6 +21,7 @@
 
 <script>
 	import imageUploadUtil from "../../utils/image_upload_util.js";
+	import dateUtil from "../../utils/date_util.js";
 
 	export default {
 		onLoad(options) {
@@ -36,7 +47,7 @@
 		data() {
 			return {
 				isEdit: false,
-				showDiaryDate: false,
+				showDate: false,
 				imageList: [],
 				info: {},
 			}
@@ -57,8 +68,12 @@
 			afterRead(event) {
 				this.imageList.push(event.file)
 			},
-			onDiaryDateSelected(params) {
-				this.info.diaryDate = params;
+			onDateSelected(params) {
+				this.info.diaryDate = uni.$u.timeFormat(params.value, 'yyyy-mm-dd');
+				this.closeDatePicker();
+			},
+			closeDatePicker() {
+				this.showDate = false;
 			},
 			commitData() {
 				// 如果有本地图片，则先进行上传
@@ -90,7 +105,18 @@
 					});
 			},
 			deleteData() {
-				request.del("the_day", this.info.id, "删除成功");
+				uni.showModal({
+					content: "是否确认删除？",
+					success: (res) => {
+						if (res.confirm) {
+							this.$request.del({
+								path: "diary",
+								id: this.info.id,
+								onSuccess: "删除成功"
+							});
+						}
+					}
+				})
 			},
 		}
 	};

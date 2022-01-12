@@ -20,8 +20,8 @@
 		data() {
 			return {
 				form: {
-					"username": "18501683421",
-					"password": "123456",
+					"username": "",
+					"password": "",
 				},
 			};
 		},

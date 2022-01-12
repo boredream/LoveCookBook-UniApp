@@ -1,107 +1,89 @@
 <template>
-	<view class="paddingHor">
-		{{this.showTheDayDate}}
+	<view class="container">
 		<input v-model="info.name" class="title-input" placeholder="请输入名字" />
-		<view @click="showTheDayDate = true" style="display: flex; align-items: center; height: 92rpx;">
-			<text class="textSubhead" style="flex-grow: 1;">日期</text>
-			<text class="textBody">{{this.$stringUtil.getStrWithDef(info.theDayDate, '')}}</text>
-			<image style="margin-left: 16rpx;" class="icon" src="../../static/ic_right_arrow.png" />
+		<view class="input-picker" @click="showDate = true">
+			<view class="textBody" style="color: #666666;">日期</view>
+			<view class="textCaption" >{{info.theDayDate ? info.theDayDate : ""}}</view>
+			<image src="../../static/ic_right_arrow.png"></image>
 		</view>
-		<view @click="" style="display: flex; align-items: center; height: 92rpx;">
-			<text class="textSubhead" style="flex-grow: 1;">显示方式</text>
-			<text class="textBody">{{notifyType}}</text>
-			<image style="margin-left: 16rpx;" class="icon" src="../../static/ic_right_arrow.png" />
-		</view>
-		<u-picker :default-time="this.$stringUtil.getStrWithDef(info.theDayDate, '')" @confirm="onTheDayDateSelected"
-			mode="time">
-		</u-picker>
-		<button class="btnPrimary" style="margin-top: 316rpx;" @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
+		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
 		<button v-if="isEdit" @click="deleteData">删除</button>
-
-		<picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
-			<view class="uni-input">{{date}}</view>
-		</picker>
 	</view>
 </template>
 
 <script>
-	import imageUploadUtil from "../../utils/image_upload_util.js";
-
 	export default {
 		onLoad(options) {
 			if (options.date != null) {
 				// 新增
 				this.isEdit = false;
-				this.info.theDayDate = options.date;
 			} else if (options.data != null) {
 				// 修改
 				this.isEdit = true;
-				this.info = JSON.parse(options.data);
+				this.info = JSON.parse(decodeURIComponent(options.data));
 			}
 		},
 		data() {
-			const currentDate = this.getDate({
-				format: true
-			})
 			return {
 				isEdit: false,
-				showTheDayDate: false,
+				showDate: false,
 				info: {},
-				date: currentDate,
-			}
-		},
-		computed: {
-			notifyType() {
-				var type = this.$stringUtil.getStrWithDef(this.info.notifyType, 0);
-				return type == 1 ? '每年倒数' : '累计天数';
-			},
-			exsitImageList() {
-				var images = this.info.images;
-				var exsitImageList = [];
-				if (images != null && images.length > 0) {
-					images.split(",").forEach(function(e) {
-						exsitImageList.push({
-							"url": e
-						});
-					});
-				}
-				return exsitImageList;
 			}
 		},
 		methods: {
-			getDate(type) {
-				const date = new Date();
-				let year = date.getFullYear();
-				let month = date.getMonth() + 1;
-				let day = date.getDate();
-
-				if (type === 'start') {
-					year = year - 60;
-				} else if (type === 'end') {
-					year = year + 2;
-				}
-				month = month > 9 ? month : '0' + month;
-				day = day > 9 ? day : '0' + day;
-				return `${year}-${month}-${day}`;
+			// 删除图片
+			deletePic(event) {
+				uni.showModal({
+					content: "是否确认删除？",
+					success: (res) => {
+						if (res.confirm) {
+							this.imageList.splice(event.index, 1)
+						}
+					}
+				})
 			},
-			onTheDayDateSelected(params) {
-				this.info.theDayDate = params.year + '-' + params.month + '-' + params.day
+			// 新增图片
+			afterRead(event) {
+				this.imageList.push(event.file)
+			},
+			onDateSelected(params) {
+				this.info.diaryDate = params;
 			},
 			commitData() {
+				// 如果有本地图片，则先进行上传
+				uni.showLoading();
 				if (this.isEdit) {
-					this.$request.put("the_day", this.info.id, this.info, "修改成功");
+					this.$request.put({
+						path: "diary",
+						id: this.info.id,
+						data: this.info,
+						onSuccess: "修改成功"
+					});
 				} else {
-					this.$request.post("the_day", this.info, "新增成功");
+					this.$request.post({
+						path: "diary",
+						data: this.info,
+						onSuccess: "新增成功"
+					});
 				}
 			},
 			deleteData() {
-				this.$request.del("the_day", this.info.id, "删除成功");
+				uni.showModal({
+					content: "是否确认删除？",
+					success: (res) => {
+						if (res.confirm) {
+							this.$request.del({
+								path: "diary",
+								id: this.info.id,
+								onSuccess: "删除成功"
+							});
+						}
+					}
+				})
 			},
 		}
 	};
 </script>
 
-
-<style>
-
+<style lang="scss" scoped>
 </style>

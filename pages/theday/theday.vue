@@ -1,7 +1,7 @@
 <template>
 	<view style="display: flex; flex-direction: column;">
 		<!-- 头 -->
-		<view class="paddingHor" style="background-color: #FB6565; padding-top: 100rpx; padding-bottom: 100rpx;">
+		<view class="paddingHor header">
 			<view @click="pickTogetherDays" class="textSubheadWhite">{{togatherTitle}}</view>
 			<view style="display: flex; justify-content: space-between; align-items: center;">
 				<view style="margin-top: 20rpx; display: flex; align-items: center; ">
@@ -15,13 +15,25 @@
 			</view>
 		</view>
 
+		<uni-fab horizontal="right" vertical="bottom" @fabClick="add"></uni-fab>
+
 		<!-- 列表 -->
-		<view style="background-color: #18B566; border-radius: 44rpx; height: max-content; flex: 1 1 0%;">
+		<view v-for="item in list">
+			<view class="list-item" @click="toDetail(item)">
+				<view class="item-left">
+					<view class="textSubhead">{{item.name}}</view>
+					<view class="textBody" style="color: #999999;" v-if="item.theDayDate">{{item.theDayDate}}</view>
+				</view>
+				<view class="item-right">
+					<image class="item-image" v-if="!item.theDayDate" src="../../static/ic_add_the_day.png"></image>
+					<view v-if="item.theDayDate">
+						<span class="textBody">{{getNotifyPre(item)}}</span>
+						<span class="textBody item-notify-days">{{getNotifyDays(item)}}</span>
+						<span class="textBody">天</span>
+					</view>
+				</view>
+			</view>
 		</view>
-		
-		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
-			新增
-		</button>
 	</view>
 </template>
 
@@ -48,7 +60,7 @@
 			setHeadInfo() {
 				this.user = userKeeper.get();
 				this.cpUser = this.user.cpUser;
-				
+
 				if (this.cpUser != null) {
 					this.cpUserAvatar = this.cpUser.avatar;
 				} else {
@@ -56,10 +68,8 @@
 				}
 				this.setTogetherDays();
 			},
-			setTogetherDays(){
-				console.log("setTogetherDays");
+			setTogetherDays() {
 				var bothTogetherDate = this.user.bothTogetherDate;
-				console.log("setTogetherDays " + bothTogetherDate);
 				if (bothTogetherDate != null) {
 					this.togatherTitle = "我们已恋爱";
 					var days = dateUtil.calculateDayDiff(time.now(), dateUtil.str2date(bothTogetherDate));
@@ -69,8 +79,28 @@
 					this.togatherDays = "1";
 				}
 			},
+			getNotifyPre(item) {
+				return item.notifyType == getApp().globalData.NOTIFY_TYPE_TOTAL_COUNT ?
+					"已经" : "还有"
+			},
+			getNotifyDays(item) {
+				var theDayDate = dateUtil.str2date(item.theDayDate);
+				var today = new Date();
+				if (item.notifyType == getApp().globalData.NOTIFY_TYPE_TOTAL_COUNT) {
+					return dateUtil.calculateDayDiff(today, theDayDate);
+				} else {
+					// 获取下一个纪念日日期，先设置成今年
+					var curYear = today.getFullYear();
+					theDayDate.setFullYear(curYear);
+					// 比较今年，如果已经过去了，则延续到下一年
+					if (theDayDate < today) {
+						theDayDate.setFullYear(curYear + 1);
+					}
+					return dateUtil.calculateDayDiff(theDayDate, today);
+				}
+			},
 			pickTogetherDays() {
-				
+
 			},
 			loadData() {
 				this.$request.get({
@@ -89,7 +119,7 @@
 			},
 			toDetail(item) {
 				uni.navigateTo({
-					url: "../theDayDetail/theDayDetail?data=" + JSON.stringify(item),
+					url: "../theday/thedaydetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})
 			},
 		}
@@ -97,13 +127,55 @@
 </script>
 
 <style>
+	.header {
+		background-color: $primary-color;
+		padding-top: 50px;
+		padding-bottom: 50px;
+	}
+
 	.imageOval {
-		width: 136rpx;
-		height: 136rpx;
+		width: 68px;
+		height: 68px;
 		border-radius: 50%;
-		border-width: 6rpx;
+		border-width: 3px;
 		border-color: #FFFFFF;
 		border-style: solid;
 		background-color: #FFFFFF;
+	}
+
+	.list-item {
+		height: 60px;
+		border-radius: 12px;
+		margin-left: 20px;
+		margin-right: 20px;
+		margin-top: 16px;
+		box-shadow: 0px 2px 12px rgba(251, 101, 101, 0.1);
+		padding: 10px;
+		display: flex;
+		flex-direction: row;
+	}
+
+	.item-left {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		flex-grow: 1;
+	}
+
+	.item-right {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.item-image {
+		width: 30px;
+		height: 30px;
+	}
+
+	.item-notify-days {
+		font-size: 36px;
+		margin-left: 4px;
+		margin-right: 4px;
 	}
 </style>
