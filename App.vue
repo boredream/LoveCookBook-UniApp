@@ -40,6 +40,10 @@
 		font-size: $font-caption;
 	}
 	
+	.planceholder {
+		color: $font-color-gray-light;
+	}
+	
 	.btnPrimary {
 		background-color: $primary-color;
 		font-size: $font-subhead;

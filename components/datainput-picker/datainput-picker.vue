@@ -2,8 +2,8 @@
 <template>
 	<view>
 		<view class="input-picker">
-			<view class="textBody input-name" style="color: #666666;">{{name}}</view>
-			<view class="textCaption input-value">{{initValue}}</view>
+			<view class="textBody input-name">{{name}}</view>
+			<view class="input-value">{{initValue}}</view>
 			<image class="input-image" src="../../static/ic_right_arrow.png"></image>
 		</view>
 		<view class="dividerHor" style="margin-left: 16px;"></view>
@@ -25,7 +25,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.input-picker {
 		height: 46px;
 		display: flex;
@@ -40,7 +40,8 @@
 	}
 	
 	.input-value {
-		
+		font-size: $font-caption;
+		color: $font-color-gray;
 	}
 
 	.input-image {

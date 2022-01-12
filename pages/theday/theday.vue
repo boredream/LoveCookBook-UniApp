@@ -138,13 +138,20 @@
 			pickTogetherDays() {
 				this.showDate = true;
 			},
-			loadData() {
+			loadData(loadMore) {
+				var requestPage = loadMore ? this.curPage + 1 : 1;
 				this.$request.get({
 					path: "the_day/page",
-					page: 1,
+					page: requestPage,
 					size: 20,
 					onSuccess: (res) => {
-						this.list = res.records;
+						if (loadMore) {
+							this.list.push(...res.records);
+						} else {
+							this.list = res.records;
+							uni.stopPullDownRefresh();
+						}
+						this.curPage = requestPage;
 					}
 				});
 			},
@@ -158,6 +165,18 @@
 					url: "../theday/thedaydetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})
 			},
+		},
+		/**
+		 * 下拉刷新回调函数
+		 */
+		onPullDownRefresh() {
+			this.loadData(false);
+		},
+		/**
+		 * 上拉加载回调函数
+		 */
+		onReachBottom() {
+			this.loadData(true);
 		}
 	}
 </script>
@@ -165,8 +184,8 @@
 <style lang="scss">
 	.header {
 		background-color: $primary-color;
-		padding-top: 50px;
-		padding-bottom: 50px;
+		padding-top: 32px;
+		padding-bottom: 32px;
 	}
 
 	.imageOval {

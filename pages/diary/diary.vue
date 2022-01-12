@@ -41,6 +41,7 @@
 							this.list.push(...res.records);
 						} else {
 							this.list = res.records;
+							uni.stopPullDownRefresh();
 						}
 						this.curPage = requestPage;
 					}

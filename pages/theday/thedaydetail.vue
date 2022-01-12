@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<input class="paddingHor input-name" v-model="info.name" placeholder="请输入名字" />
+		<input class="paddingHor input-name" v-model="info.name" placeholder="请输入名字" placeholder-class="planceholder" />
 		<view class="dividerHor" style="margin-left: 16px;"></view>
 		<datainput-picker-date name="日期" :initValue="info.theDayDate" @onSelected="onDateSelected" />
 		<datainput-picker-list name="显示方式" :initValue="info.notifyType" initIndex="0" :columns="notifyTypeList" @onSelected="onTypeSelected" />
