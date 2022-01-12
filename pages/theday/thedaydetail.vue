@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<input v-model="info.name" class="title-input" placeholder="请输入名字" />
-		<datainput-picker name="日期" @onDateSelected="onDateSelected"></datainput-picker>
+		<datainput-picker-date name="日期" :initValue="info.theDayDate" @onSelected="onDateSelected"></datainput-picker-date>
 		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
 		<button v-if="isEdit" @click="deleteData">删除</button>
 	</view>
