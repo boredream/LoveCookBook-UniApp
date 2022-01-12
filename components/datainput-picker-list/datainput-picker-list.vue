@@ -1,10 +1,17 @@
-<!-- 日期 -->
+<!-- 普通文字选项 -->
 <template>
 	<view>
 		<view @click="show = true">
 			<datainput-picker :name="name" :initValue="value"></datainput-picker>
 		</view>
-		<u-picker :show="show" :columns="columns"></u-picker>
+		
+		<u-picker :show="show" 
+			:columns="valueList"
+			singleIndex="singleIndex"
+			closeOnClickOverlay
+			@confirm="confirm"
+			@cancel="cancel">
+		</u-picker>
 	</view>
 </template>
 
@@ -17,24 +24,35 @@
 			},
 			columns: {
 				type: Array,
+				default () {
+					return [];
+				}
 			},
-			initValue: {
-				type: String,
-				default: ""
+			initIndex: {
+				type: Number,
+				default: -1,
 			}
 		},
 		mounted() {
-			this.value = this.initValue;
+			// picker可以是多维数组
+			this.valueList.push(this.columns);
+			if(this.initIndex >= 0) {
+				this.singleIndex = this.initIndex;
+				this.value = this.valueList[0][this.singleIndex];
+			}
 		},
 		data() {
 			return {
 				show: false,
+				valueList: [],
 				value: "",
+				singleIndex: -1,
 			}
 		},
 		methods: {
 			confirm(params) {
-				this.value = uni.$u.timeFormat(params.value, 'yyyy-mm-dd');
+				// 回调参数为包含columnIndex、value、values
+				this.value = params.value[0];
 				this.show = false;
 				this.$emit('onSelected', this.value);
 			},

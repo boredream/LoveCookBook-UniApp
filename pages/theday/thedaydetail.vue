@@ -1,9 +1,10 @@
 <template>
 	<view class="container">
 		<input v-model="info.name" class="title-input" placeholder="请输入名字" />
-		<datainput-picker-date name="日期" :initValue="info.theDayDate" @onSelected="onDateSelected"></datainput-picker-date>
-		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
-		<button v-if="isEdit" @click="deleteData">删除</button>
+		<datainput-picker-date name="日期" :initValue="info.theDayDate" @onSelected="onDateSelected" />
+		<datainput-picker-list name="显示方式" :initValue="info.notifyType" initIndex="0" :columns="notifyTypeList" @onSelected="onTypeSelected" />
+		<button style="margin-top: 64px;" class="paddingHor" @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
+		<button class="paddingHor" v-if="isEdit" @click="deleteData">删除</button>
 	</view>
 </template>
 
@@ -18,6 +19,11 @@
 				this.isEdit = true;
 				this.info = JSON.parse(decodeURIComponent(options.data));
 			}
+			
+			if(!this.info.notifyType) {
+				// 默认设置提醒类型
+				this.info.notifyType = getApp().globalData.NOTIFY_TYPE_TOTAL_COUNT;
+			}
 		},
 		data() {
 			return {
@@ -26,38 +32,32 @@
 				info: {},
 			}
 		},
+		computed: {
+			notifyTypeList() {
+				var list = ["累计天数", "按年倒数"];
+				return list;
+			}
+		},
 		methods: {
-			// 删除图片
-			deletePic(event) {
-				uni.showModal({
-					content: "是否确认删除？",
-					success: (res) => {
-						if (res.confirm) {
-							this.imageList.splice(event.index, 1)
-						}
-					}
-				})
-			},
-			// 新增图片
-			afterRead(event) {
-				this.imageList.push(event.file)
-			},
 			onDateSelected(params) {
-				this.info.diaryDate = params;
+				this.info.theDayDate = params;
+			},
+			onTypeSelected(params) {
+				this.info.notifyType = this.notifyTypeList.indexOf(params) + 1;
 			},
 			commitData() {
 				// 如果有本地图片，则先进行上传
 				uni.showLoading();
 				if (this.isEdit) {
 					this.$request.put({
-						path: "diary",
+						path: "the_day",
 						id: this.info.id,
 						data: this.info,
 						onSuccess: "修改成功"
 					});
 				} else {
 					this.$request.post({
-						path: "diary",
+						path: "the_day",
 						data: this.info,
 						onSuccess: "新增成功"
 					});
@@ -69,7 +69,7 @@
 					success: (res) => {
 						if (res.confirm) {
 							this.$request.del({
-								path: "diary",
+								path: "the_day",
 								id: this.info.id,
 								onSuccess: "删除成功"
 							});
