@@ -63,6 +63,10 @@
 		color: $primary-color;
 	}
 	
+	.cardShadow {
+		box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+	}
+	
 	.dividerHor {
 		height: 0.5px;
 		background-color: #000000;

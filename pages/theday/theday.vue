@@ -4,25 +4,25 @@
 		<view class="paddingHor header">
 			<view @click="pickTogetherDays" class="textSubheadWhite">{{togatherTitle}}</view>
 			<view style="display: flex; justify-content: space-between; align-items: center;">
-				<view style="margin-top: 20rpx; display: flex; align-items: center; ">
-					<text style="font-size: 120rpx; color: #FFFFFF;">{{togatherDays}}</text>
-					<text class="textSubheadWhite" style="margin-left: 8rpx; margin-top: 32rpx;">天</text>
+				<view style="margin-top: 16px; display: flex; align-items: center; ">
+					<text style="font-size: 48px; color: #FFFFFF;">{{togatherDays}}</text>
+					<text class="textSubheadWhite" style="margin-left: 10px; margin-top: 20px;">天</text>
 				</view>
 				<view style="display: flex; flex-direction: row-reverse;">
-					<image class="imageOval" mode="aspectFill" style="margin-left: -24rpx;" :src="cpUserAvatar" />
+					<image class="imageOval" mode="aspectFill" style="margin-left: -12px;" :src="cpUserAvatar" />
 					<image class="imageOval" mode="aspectFill" :src="user.avatar" />
 				</view>
 			</view>
 		</view>
 
-		<uni-fab horizontal="right" vertical="bottom" @fabClick="add"></uni-fab>
+		<bd-fab @fabClick="add"></bd-fab>
 
 		<!-- 列表 -->
 		<view v-for="item in list">
-			<view class="list-item" @click="toDetail(item)">
+			<view class="list-item cardShadow" @click="toDetail(item)">
 				<view class="item-left">
 					<view class="textSubhead">{{item.name}}</view>
-					<view class="textBody" style="color: #999999;" v-if="item.theDayDate">{{item.theDayDate}}</view>
+					<view class="textBody item-date" v-if="item.theDayDate">{{item.theDayDate}}</view>
 				</view>
 				<view class="item-right">
 					<image class="item-image" v-if="!item.theDayDate" src="../../static/ic_add_the_day.png"></image>
@@ -185,12 +185,12 @@
 	.header {
 		background-color: $primary-color;
 		padding-top: 32px;
-		padding-bottom: 32px;
+		padding-bottom: 24px;
 	}
 
 	.imageOval {
-		width: 68px;
-		height: 68px;
+		width: 64px;
+		height: 64px;
 		border-radius: 50%;
 		border-width: 3px;
 		border-color: #FFFFFF;
@@ -199,13 +199,13 @@
 	}
 
 	.list-item {
-		height: 60px;
+		height: 80px;
 		border-radius: 12px;
 		margin-left: 20px;
 		margin-right: 20px;
-		margin-top: 16px;
-		box-shadow: 0px 2px 12px rgba(251, 101, 101, 0.1);
-		padding: 10px;
+		margin-top: 12px;
+		padding-left: 16px;
+		padding-right: 16px;
 		display: flex;
 		flex-direction: row;
 	}
@@ -215,12 +215,21 @@
 		flex-direction: column;
 		justify-content: center;
 		flex-grow: 1;
+		
+		.item-date {
+			color: $font-color-gray-light;
+			margin-top: 4px;
+		}
 	}
 
 	.item-right {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		
+		span {
+			color: $font-color-black;
+		}
 	}
 
 	.item-image {
@@ -229,7 +238,7 @@
 	}
 
 	.item-notify-days {
-		font-size: 36px;
+		font-size: 30px;
 		margin-left: 4px;
 		margin-right: 4px;
 	}

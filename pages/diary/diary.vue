@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-fab horizontal="right" vertical="bottom" @fabClick="add"></uni-fab>
+		<bd-fab @fabClick="add"></bd-fab>
 
 		<view style="padding: 5px;" v-for="item in list">
 			<span @click="toDetail(item)">[{{item.diaryDate}}] {{item.content}}</span>
