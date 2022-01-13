@@ -1,21 +1,11 @@
 <template>
 	<view class="container">
-		<textarea style="padding: 24rpx;" placeholder="详细描述..." :auto-height="true" maxlength="-1"
-			v-model="info.content" class="post-txt"></textarea>
-		<u-upload @delete="deletePic" sizeType="['compressed']" maxCount="9" :fileList="imageList"
-			@afterRead="afterRead"></u-upload>
-		<view class="input-picker" @click="showDate = true">
-			{{info.diaryDate ? info.diaryDate : ""}}
-		</view>
-		<u-datetime-picker 
-			:show="showDate" 
-			mode="date" 
-			closeOnClickOverlay="true"
-			@confirm="onDateSelected"
-			@cancel="closeDatePicker">
-		</u-datetime-picker>
-		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
-		<button v-if="isEdit" @click="deleteData">删除</button>
+		<textarea class="paddingHor input-name" v-model="info.content" placeholder="请输入日记内容" placeholder-class="planceholder" />
+		<view class="paddingHor"><datainput-grid-images :initImageList="imageList"></datainput-grid-images></view>
+		<view class="dividerHor" style="margin-left: 20px;"></view>
+		<datainput-picker-date name="日期" :initValue="info.diaryDate" @onSelected="onDateSelected" />
+		<button style="margin-top: 90px; margin-bottom: 16px;" class="marginHor btnPrimary" @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
+		<button class="marginHor btnPrimaryStroke" v-if="isEdit" @click="deleteData">删除</button>
 	</view>
 </template>
 
@@ -25,10 +15,7 @@
 
 	export default {
 		onLoad(options) {
-			if (options.date != null) {
-				// 新增
-				this.isEdit = false;
-			} else if (options.data != null) {
+			if (options.data != null) {
 				// 修改
 				this.isEdit = true;
 				this.info = JSON.parse(decodeURIComponent(options.data));
@@ -41,8 +28,15 @@
 						});
 					});
 				}
-				console.log("exsitImageList " + this.imageList);
+			} else {
+				// 新增
+				this.isEdit = false;
+				this.info = {
+					diaryDate: dateUtil.date2str(new Date(), "yyyy-MM-dd")
+				}
 			}
+			
+			console.log("onLoad " + this.info.diaryDate);
 		},
 		data() {
 			return {
@@ -53,27 +47,8 @@
 			}
 		},
 		methods: {
-			// 删除图片
-			deletePic(event) {
-				uni.showModal({
-					content: "是否确认删除？",
-					success: (res) => {
-						if (res.confirm) {
-							this.imageList.splice(event.index, 1)
-						}
-					}
-				})
-			},
-			// 新增图片
-			afterRead(event) {
-				this.imageList.push(event.file)
-			},
 			onDateSelected(params) {
-				this.info.diaryDate = uni.$u.timeFormat(params.value, 'yyyy-mm-dd');
-				this.closeDatePicker();
-			},
-			closeDatePicker() {
-				this.showDate = false;
+				this.info.diaryDate = params;
 			},
 			commitData() {
 				// 如果有本地图片，则先进行上传
@@ -123,4 +98,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.input-name {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		font-size: $font-subhead;
+		color: $font-color-gray;
+	}
 </style>

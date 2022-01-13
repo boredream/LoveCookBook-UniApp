@@ -1,9 +1,9 @@
 <template>
 	<view class="container">
 		<input class="paddingHor input-name" v-model="info.name" placeholder="请输入名字" placeholder-class="planceholder" />
-		<view class="dividerHor" style="margin-left: 16px;"></view>
+		<view class="dividerHor" style="margin-left: 20px;"></view>
 		<datainput-picker-date name="日期" :initValue="info.theDayDate" @onSelected="onDateSelected" />
-		<datainput-picker-list name="显示方式" :initValue="info.notifyType" initIndex="0" :columns="notifyTypeList" @onSelected="onTypeSelected" />
+		<datainput-picker-list name="显示方式" :initValue="notifyType" :columns="notifyTypeList" @onSelected="onTypeSelected" />
 		<button style="margin-top: 90px; margin-bottom: 16px;" class="marginHor btnPrimary" @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
 		<button class="marginHor btnPrimaryStroke" v-if="isEdit" @click="deleteData">删除</button>
 	</view>
@@ -12,18 +12,16 @@
 <script>
 	export default {
 		onLoad(options) {
-			if (options.date != null) {
-				// 新增
-				this.isEdit = false;
-			} else if (options.data != null) {
+			if (options.data != null) {
 				// 修改
 				this.isEdit = true;
 				this.info = JSON.parse(decodeURIComponent(options.data));
-			}
-			
-			if(!this.info.notifyType) {
-				// 默认设置提醒类型
-				this.info.notifyType = getApp().globalData.NOTIFY_TYPE_TOTAL_COUNT;
+			} else {
+				// 新增
+				this.isEdit = false;
+				this.info = {
+					notifyType: getApp().globalData.NOTIFY_TYPE_TOTAL_COUNT
+				}
 			}
 		},
 		data() {
@@ -37,6 +35,9 @@
 			notifyTypeList() {
 				var list = ["累计天数", "按年倒数"];
 				return list;
+			},
+			notifyType() {
+				return this.notifyTypeList[this.info.notifyType - 1];
 			}
 		},
 		methods: {

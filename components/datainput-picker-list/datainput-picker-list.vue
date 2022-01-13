@@ -28,25 +28,21 @@
 					return [];
 				}
 			},
-			initIndex: {
-				type: Number,
-				default: -1,
+			initValue: {
+				type: String,
+				default: "",
 			}
 		},
 		mounted() {
 			// picker可以是多维数组
 			this.valueList.push(this.columns);
-			if(this.initIndex >= 0) {
-				this.singleIndex = this.initIndex;
-				this.value = this.valueList[0][this.singleIndex];
-			}
+			this.value = this.initValue;
 		},
 		data() {
 			return {
 				show: false,
 				valueList: [],
 				value: "",
-				singleIndex: -1,
 			}
 		},
 		methods: {
