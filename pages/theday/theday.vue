@@ -200,7 +200,6 @@
 
 	.list-item {
 		height: 80px;
-		border-radius: 12px;
 		margin-left: 20px;
 		margin-right: 20px;
 		margin-top: 12px;

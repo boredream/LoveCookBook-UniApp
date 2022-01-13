@@ -2,6 +2,7 @@ export default {
 	date2str,
 	str2date,
 	calculateDayDiff,
+	getWeek,
 }
 
 function calculateDayDiff(date1, date2) {
@@ -42,4 +43,26 @@ function date2str(date, fmt) {
 		}
 	}
 	return fmt;
+}
+
+function getWeek(date) {
+	//第一种方法
+	var str = "";  
+	var week = date.getDay();  
+	if (week == 0) {  
+	    str = "周日";  
+	} else if (week == 1) {  
+	    str = "周一";  
+	} else if (week == 2) {  
+	    str = "周二";  
+	} else if (week == 3) {  
+	    str = "周三";  
+	} else if (week == 4) {  
+	    str = "周四";  
+	} else if (week == 5) {  
+	    str = "周五";  
+	} else if (week == 6) {  
+	    str = "周六";  
+	} 
+	return str;
 }

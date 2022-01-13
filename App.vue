@@ -20,6 +20,16 @@
 	@import "uview-ui/index.scss";
 	
 	/*每个页面公共css */
+	.llVer {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.llHor {
+		display: flex;
+		flex-direction: row;
+	}
+	
 	.textSubheadWhite {
 		color: #FFFFFF;
 		font-size: $font-subhead;
@@ -64,6 +74,7 @@
 	}
 	
 	.cardShadow {
+		border-radius: 12px;
 		box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
 	}
 	
