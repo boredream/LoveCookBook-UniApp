@@ -60,13 +60,13 @@
 						path: "the_day",
 						id: this.info.id,
 						data: this.info,
-						onSuccess: "修改成功"
+						onSuccess: ()=> this.onComplete("修改成功"),
 					});
 				} else {
 					this.$request.post({
 						path: "the_day",
 						data: this.info,
-						onSuccess: "新增成功"
+						onSuccess: ()=> this.onComplete("新增成功"),
 					});
 				}
 			},
@@ -78,11 +78,16 @@
 							this.$request.del({
 								path: "the_day",
 								id: this.info.id,
-								onSuccess: "删除成功"
+								onSuccess: ()=> this.onComplete("删除成功"),
 							});
 						}
 					}
-				})
+				});
+			},
+			onComplete(msg) {
+				this.$toast(msg);
+				this.$EventBus.$emit("theDayChanged");
+				uni.navigateBack();
 			},
 		}
 	};

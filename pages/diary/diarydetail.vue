@@ -1,10 +1,14 @@
 <template>
 	<view>
-		<textarea class="paddingHor input-name" v-model="info.content" placeholder="请输入日记内容" placeholder-class="planceholder" />
-		<view class="paddingHor"><datainput-grid-images @onImageChanged="onImageChanged" :initImageList="imageList"></datainput-grid-images></view>
+		<textarea class="paddingHor input-name" v-model="info.content" placeholder="请输入日记内容"
+			placeholder-class="planceholder" />
+		<view class="paddingHor">
+			<datainput-grid-images @onImageChanged="onImageChanged" :initImageList="imageList"></datainput-grid-images>
+		</view>
 		<view class="dividerHor" style="margin-left: 20px;"></view>
 		<datainput-picker-date name="日期" :initValue="info.diaryDate" @onSelected="onDateSelected" />
-		<button style="margin-top: 90px; margin-bottom: 16px;" class="marginHor btnPrimary" @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
+		<button style="margin-top: 90px; margin-bottom: 16px;" class="marginHor btnPrimary"
+			@click="commitData">{{isEdit ? "修改" : "新增"}}</button>
 		<button class="marginHor btnPrimaryStroke" v-if="isEdit" @click="deleteData">删除</button>
 	</view>
 </template>
@@ -52,16 +56,16 @@
 				this.imageList = params;
 			},
 			commitData() {
-				if(this.$stringUtil.isEmpty(this.info.content)) {
+				if (this.$stringUtil.isEmpty(this.info.content)) {
 					this.$toast("日记内容不能为空");
 					return;
 				}
-				
-				if(this.$stringUtil.isEmpty(this.info.diaryDate)) {
+
+				if (this.$stringUtil.isEmpty(this.info.diaryDate)) {
 					this.$toast("日期不能为空");
 					return;
 				}
-				
+
 				// 如果有本地图片，则先进行上传
 				uni.showLoading();
 				imageUploadUtil.check4upload(this.imageList)
@@ -73,13 +77,13 @@
 								path: "diary",
 								id: this.info.id,
 								data: this.info,
-								onSuccess: "修改成功"
+								onSuccess: () => this.onComplete("修改成功"),
 							});
 						} else {
 							this.$request.post({
 								path: "diary",
 								data: this.info,
-								onSuccess: "新增成功"
+								onSuccess: () => this.onComplete("新增成功"),
 							});
 						}
 					}).catch((error) => {
@@ -98,11 +102,16 @@
 							this.$request.del({
 								path: "diary",
 								id: this.info.id,
-								onSuccess: "删除成功"
+								onSuccess: () => this.onComplete("删除成功"),
 							});
 						}
 					}
-				})
+				});
+			},
+			onComplete(msg) {
+				this.$toast(msg);
+				this.$EventBus.$emit("diaryChanged");
+				uni.navigateBack();
 			},
 		}
 	};

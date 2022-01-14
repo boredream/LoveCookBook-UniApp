@@ -41,6 +41,15 @@
 		onLoad() {
 			this.loadData();
 		},
+		mounted() {
+			this.$EventBus.$on('todoChanged', () => {
+				console.log("刷新");
+				this.loadData();
+			})
+		},
+		beforeDestroy() {
+			this.$EventBus.$off('todoChanged')
+		},
 		methods: {
 			groupProgress(group) {
 				var totalCount = 0;

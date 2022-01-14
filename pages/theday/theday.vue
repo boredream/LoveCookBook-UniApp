@@ -34,16 +34,11 @@
 				</view>
 			</view>
 		</view>
-		
-		<u-datetime-picker
-			:show="showDate" 
-			mode="date" 
-			v-model="togatherDate"
-			closeOnClickOverlay
-			@confirm="confirm"
+
+		<u-datetime-picker :show="showDate" mode="date" v-model="togatherDate" closeOnClickOverlay @confirm="confirm"
 			@cancel="cancel">
 		</u-datetime-picker>
-		
+
 	</view>
 </template>
 
@@ -53,8 +48,18 @@
 
 	export default {
 		onLoad() {
-			this.loadData();
+			this.loadData(false);
 			this.setHeadInfo();
+		},
+		mounted() {
+			this.$EventBus.$on('theDayChanged', () => {
+				console.log("刷新");
+				uni.startPullDownRefresh();
+				this.loadData(false);
+			})
+		},
+		beforeDestroy() {
+			this.$EventBus.$off('theDayChanged')
 		},
 		data() {
 			return {
@@ -214,7 +219,7 @@
 		flex-direction: column;
 		justify-content: center;
 		flex-grow: 1;
-		
+
 		.item-date {
 			color: $font-color-gray-light;
 			margin-top: 4px;
@@ -225,7 +230,7 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		
+
 		span {
 			color: $font-color-black;
 		}

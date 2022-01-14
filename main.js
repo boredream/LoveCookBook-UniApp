@@ -11,6 +11,9 @@ Vue.prototype.$stringUtil = stringUtil
 Vue.prototype.$request = requestUtil
 Vue.prototype.$toast = toast
 
+// event bus
+Vue.prototype.$EventBus = new Vue()
+
 // #ifndef VUE3
 import Vue from 'vue'
 Vue.config.productionTip = false

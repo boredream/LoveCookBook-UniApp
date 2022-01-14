@@ -54,6 +54,15 @@
 		onLoad() {
 			this.loadData(false);
 		},
+		mounted() {
+			this.$EventBus.$on('diaryChanged', () => {
+				console.log("刷新");
+				this.loadData(false);
+			})
+		},
+		beforeDestroy() {
+			this.$EventBus.$off('diaryChanged')
+		},
 		methods: {
 			getDay(date) {
 				return date.split("-")[2];
