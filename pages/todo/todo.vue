@@ -72,6 +72,9 @@
 				if(!item.done) {
 					return "../../static/ic_todo_lock.png"
 				}
+				if(this.$stringUtil.contains(item.images, ',')) {
+					return item.images.split(',')[0];
+				}
 				return item.image;
 			},
 			add() {
