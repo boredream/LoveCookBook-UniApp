@@ -1,86 +1,98 @@
 <template>
 	<view class="container">
-		<input v-model="info.name" class="title-input" placeholder="标题" />
-		<textarea placeholder="详细描述..." :auto-height="true" maxlength="-1" v-model="info.detail"
-			class="post-txt"></textarea>
-		<view @click="showDoneDate = true">完成日期：{{info.doneDate != null ? info.doneDate : ""}}</view>
-		<!-- <view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view> -->
-		<u-upload ref="uUpload" :size-type="['compressed']" :max-count="9" :auto-upload="false"
-			:file-list="exsitImageList"></u-upload>
-		<u-picker :default-time="info.doneDate" @confirm="onDoneDateSelected" mode="time" v-model="showDoneDate">
-		</u-picker>
-		<u-picker :default-time="info.notifyDate" @confirm="onNotifyDateSelected" mode="time" v-model="showNotifyDate">
-		</u-picker>
-		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
-		<button v-if="isEdit" @click="deleteData">删除</button>
+		<input class="paddingHor input-name" v-model="info.name" placeholder="请输入标题" placeholder-class="planceholder" />
+		<view class="dividerHor" style="margin-left: 20px;"></view>
+		<textarea class="paddingHor input-name" v-model="info.content" placeholder="描述一下这段回忆吧…"
+			placeholder-class="planceholder" />
+		<view class="paddingHor">
+			<datainput-grid-images :initImageList="imageList"></datainput-grid-images>
+		</view>
+		<view class="dividerHor" style="margin-left: 20px;"></view>
+		<datainput-picker-date name="日期" :initValue="info.todoDate" @onSelected="onDateSelected" />
+		<button style="margin-top: 90px; margin-bottom: 16px;" class="marginHor btnPrimary"
+			@click="commitData">{{isEdit ? "修改" : "新增"}}</button>
+		<button class="marginHor btnPrimaryStroke" v-if="isEdit" @click="deleteData">删除</button>
 	</view>
 </template>
 
 <script>
-	import request from "../../utils/request_util.js";
 	import imageUploadUtil from "../../utils/image_upload_util.js";
 
 	export default {
 		onLoad(options) {
-			if (options.type != null) {
-				// 新增
-				this.isEdit = false;
-				this.info.type = options.type;
-			} else if (options.data != null) {
+			if (options.data != null) {
 				// 修改
 				this.isEdit = true;
-				this.info = JSON.parse(options.data);
+				this.info = JSON.parse(decodeURIComponent(options.data));
+
+				var images = this.info.images;
+				if (images != null && images.length > 0) {
+					images.split(",").forEach((e) => {
+						this.imageList.push({
+							"url": e
+						});
+					});
+				}
+			} else {
+				// 新增
+				this.isEdit = false;
+				this.info = {
+					todoDate: dateUtil.date2str(new Date(), "yyyy-MM-dd")
+				}
 			}
 		},
 		data() {
 			return {
 				isEdit: false,
-				showDoneDate: false,
-				showNotifyDate: false,
+				showDate: false,
+				imageList: [],
 				info: {},
 			}
 		},
-		computed: {
-			exsitImageList() {
-				var images = this.info.images;
-				var exsitImageList = [];
-				if (images != null && images.length > 0) {
-					images.split(",").forEach(function(e) {
-						exsitImageList.push({
-							"url": e
-						});
-					});
-				}
-				return exsitImageList;
-			}
-		},
 		methods: {
-			onDoneDateSelected(params) {
-				this.info.doneDate = params.year + '-' + params.month + '-' + params.day
-			},
-			onNotifyDateSelected(params) {
-				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
+			onDateSelected(params) {
+				this.info.todoDate = params;
 			},
 			commitData() {
-				// 如果有本地图片，则先进行上传
-				imageUploadUtil.check4upload(this.$refs.uUpload.lists).then((imageUrls) => {
-					this.info.images = imageUrls;
-
-					// 上传成功后发送请求
-					if (this.isEdit) {
-						request.put("todo", this.info.id, this.info, "修改成功");
-					} else {
-						request.post("todo", this.info, "新增成功");
-					}
-				}).catch((error) => {
-					uni.hideLoading();
-					uni.showToast({
-						title: "图片上传失败，请重新提交"
+				imageUploadUtil.check4upload(this.imageList)
+					.then((imageUrls) => {
+						this.info.images = imageUrls;
+						// 上传成功后发送请求
+						if (this.isEdit) {
+							this.$request.put({
+								path: "todo",
+								id: this.info.id,
+								data: this.info,
+								onSuccess: "修改成功"
+							});
+						} else {
+							this.$request.post({
+								path: "todo",
+								data: this.info,
+								onSuccess: "新增成功"
+							});
+						}
+					}).catch((error) => {
+						uni.hideLoading();
+						uni.showToast({
+							title: "图片上传失败，请重新提交"
+						});
+						console.log("图片上传失败 " + error);
 					});
-				});
 			},
 			deleteData() {
-				request.del("todo", this.info.id, "删除成功");
+				uni.showModal({
+					content: "是否确认删除？",
+					success: (res) => {
+						if (res.confirm) {
+							this.$request.del({
+								path: "todo",
+								id: this.info.id,
+								onSuccess: "删除成功"
+							});
+						}
+					}
+				})
 			},
 		}
 	};
@@ -88,75 +100,11 @@
 
 
 <style lang="scss" scoped>
-	.title-input {
-		border-bottom: 1px solid #F5F5F5;
-		margin: 20rpx 0;
-		padding: 20rpx 0;
+	.input-name {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		font-size: $font-subhead;
+		color: $font-color-gray;
 	}
 
-	.post-txt {
-		width: 100%;
-		padding: 20rpx 0;
-		min-height: 200rpx;
-	}
-
-	.upload-wrap {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		width: 180rpx;
-		height: 180rpx;
-		background-color: #F5F5F5;
-		margin-top: 30rpx;
-		border-radius: 10rpx;
-
-		.icon {
-			width: 50rpx;
-			height: 50rpx;
-		}
-
-		text {
-			font-size: 24rpx;
-		}
-	}
-
-	.upload-video {
-		width: 180rpx;
-		height: 180rpx;
-		margin-top: 30rpx;
-	}
-
-	.choose-item {
-		display: flex;
-		align-items: center;
-		padding: 20rpx;
-		border-bottom: 1px solid #F5F5F5;
-
-		&:last-child {
-			border: 0;
-		}
-
-		.txt {
-			margin-left: 20rpx;
-		}
-
-		.icon {
-			width: 40rpx;
-			height: 40rpx;
-		}
-
-		.u-icon {
-			margin-left: auto;
-			color: #999;
-		}
-
-		.add-icon {
-			margin-left: 0;
-		}
-	}
-
-	.submit-btn {
-		margin-top: 50rpx;
-	}
 </style>

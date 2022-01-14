@@ -35,8 +35,6 @@
 					diaryDate: dateUtil.date2str(new Date(), "yyyy-MM-dd")
 				}
 			}
-			
-			console.log("onLoad " + this.info.diaryDate);
 		},
 		data() {
 			return {

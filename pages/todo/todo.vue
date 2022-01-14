@@ -11,10 +11,14 @@
 			</view>
 			<view class="paddingHor">
 				<u-grid col="4">
-					<u-grid-item v-for="item in group.todoList">
-						<image class="itemImage" src="../../static/avatar_boy.png" ></image>
+					<u-grid-item @click="toDetail(item)" v-for="item in group.todoList">
+						<image class="itemImage" :src="todoImage(item)" ></image>
 						<view class="itemName">{{item.name}}</view>
 						<view class="itemDate">{{item.todoDate}}</view>
+					</u-grid-item>
+					<u-grid-item @click="add()">
+						<image class="itemImage" src="../../static/ic_add_red.png"></image>
+						<view class="itemName"></view>
 					</u-grid-item>
 				</u-grid>
 			</view>
@@ -38,7 +42,21 @@
 		},
 		methods: {
 			groupProgress(group) {
-				return "1/10";
+				var totalCount = 0;
+				var progressCount = 0;
+				for (var todo in group.todoList) {
+					totalCount++;
+					if (todo.isDone) {
+						progressCount++;
+					}
+				}
+				return progressCount + "/" + totalCount;
+			},
+			todoImage(item) {
+				if(item.image == null) {
+					return "../../static/ic_todo_lock.png"
+				}
+				return item.image;
 			},
 			add() {
 				uni.navigateTo({
@@ -110,6 +128,8 @@
 	.itemImage {
 		width: 72px;
 		height: 72px;
+		border-radius: 36px;
+		background-color: $color-default-gray;
 	}
 	
 	.itemName {
