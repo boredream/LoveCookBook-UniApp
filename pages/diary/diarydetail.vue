@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<textarea class="paddingHor input-name" v-model="info.content" placeholder="请输入日记内容" placeholder-class="planceholder" />
-		<view class="paddingHor"><datainput-grid-images :initImageList="imageList"></datainput-grid-images></view>
+		<view class="paddingHor"><datainput-grid-images @onImageChanged="onImageChanged" :initImageList="imageList"></datainput-grid-images></view>
 		<view class="dividerHor" style="margin-left: 20px;"></view>
 		<datainput-picker-date name="日期" :initValue="info.diaryDate" @onSelected="onDateSelected" />
 		<button style="margin-top: 90px; margin-bottom: 16px;" class="marginHor btnPrimary" @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
@@ -47,6 +47,9 @@
 		methods: {
 			onDateSelected(params) {
 				this.info.diaryDate = params;
+			},
+			onImageChanged(params) {
+				this.imageList = params;
 			},
 			commitData() {
 				if(this.$stringUtil.isEmpty(this.info.content)) {

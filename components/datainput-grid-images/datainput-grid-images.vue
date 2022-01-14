@@ -38,19 +38,18 @@
 					success: (res) => {
 						if (res.confirm) {
 							this.imageList.splice(event.index, 1);
-							this.onChanged();
+							this.onImageChanged();
 						}
 					}
 				})
 			},
 			// 新增图片
 			afterRead(event) {
-				console.log("event " + JSON.stringify(event));
 				this.imageList.push(event.file);
-				this.onChanged();
+				this.onImageChanged();
 			},
-			onChanged() {
-				this.$emit('onChanged', this.imageList);
+			onImageChanged() {
+				this.$emit('onImageChanged', this.imageList);
 			},
 		}
 	}
