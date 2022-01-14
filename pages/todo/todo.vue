@@ -1,22 +1,22 @@
 <template>
 	<view>
-		<bd-fab @fabClick="add"></bd-fab>
+		<bd-fab @fabClick="addGroup()"></bd-fab>
 		<view class="textTopTip">已打卡{{totalProgressStr}}次</view>
 		<view v-for="group in groupList">
 			<view class="llHor paddingHor groupContainer">
 				<image class="icon" src="../../static/ic_todo_cus.png"></image>
 				<view class="groupName">{{group.name}}</view>
 				<view class="textCaption grow">{{progressStr(groupProgress(group))}}</view>
-				<u-icon name="more-dot-fill"></u-icon>
+				<u-icon name="more-dot-fill" @click="toGroupDetail(group)"></u-icon>
 			</view>
 			<view class="paddingHor">
 				<u-grid col="4">
-					<u-grid-item @click="toDetail(item)" v-for="item in group.todoList">
+					<u-grid-item @click="toItemDetail(item)" v-for="item in group.todoList">
 						<image class="itemImage" :src="todoImage(item)" ></image>
 						<view class="itemName">{{item.name}}</view>
 						<view class="itemDate">{{item.doneDate || ''}}</view>
 					</u-grid-item>
-					<u-grid-item @click="add()">
+					<u-grid-item @click="addItem(group)">
 						<image class="itemImage" src="../../static/ic_add_red.png"></image>
 						<view class="itemName"></view>
 					</u-grid-item>
@@ -77,12 +77,22 @@
 				}
 				return item.image;
 			},
-			add() {
+			addGroup() {
 				uni.navigateTo({
-					url: "../todo/tododetail",
+					url: "../todo/todogroupdetail",
 				})
 			},
-			toDetail(item) {
+			toGroupDetail(item) {
+				uni.navigateTo({
+					url: "../todo/todogroupdetail?data=" + encodeURIComponent(JSON.stringify(item)),
+				})
+			},
+			addItem(group) {
+				uni.navigateTo({
+					url: "../todo/tododetail?todoGroupId=" + group.id,
+				})
+			},
+			toItemDetail(item) {
 				uni.navigateTo({
 					url: "../todo/tododetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})

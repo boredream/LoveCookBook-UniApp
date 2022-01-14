@@ -72,6 +72,11 @@
 				"navigationBarTitleText": "清单详情"
 			}
 		}, {
+			"path": "pages/todo/todogroupdetail",
+			"style": {
+				"navigationBarTitleText": "清单组详情"
+			}
+		}, {
 			"path": "pages/mine/mine",
 			"style": {
 				"navigationBarTitleText": "我的"

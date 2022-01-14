@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view>
 		<input class="paddingHor input-name" v-model="info.name" placeholder="请输入标题" placeholder-class="planceholder" />
 		<view class="dividerHor" style="margin-left: 20px;"></view>
 		<textarea class="paddingHor input-name" v-model="info.content" placeholder="描述一下这段回忆吧…"
@@ -37,6 +37,7 @@
 			} else {
 				// 新增
 				this.isEdit = false;
+				this.info.todoGroupId = options.todoGroupId;
 			}
 		},
 		data() {

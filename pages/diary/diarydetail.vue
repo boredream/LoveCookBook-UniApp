@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view>
 		<textarea class="paddingHor input-name" v-model="info.content" placeholder="请输入日记内容" placeholder-class="planceholder" />
 		<view class="paddingHor"><datainput-grid-images @onImageChanged="onImageChanged" :initImageList="imageList"></datainput-grid-images></view>
 		<view class="dividerHor" style="margin-left: 20px;"></view>
