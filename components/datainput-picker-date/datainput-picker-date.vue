@@ -30,7 +30,6 @@
 			}
 		},
 		mounted() {
-			console.log("mounted " + this.initValue);
 			this.value = this.initValue;
 			if(this.value != "") {
 				this.initDate = Number(dateUtil.str2date(this.value));

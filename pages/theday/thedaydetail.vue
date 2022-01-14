@@ -48,6 +48,11 @@
 				this.info.notifyType = this.notifyTypeList.indexOf(params) + 1;
 			},
 			commitData() {
+				if(this.$stringUtil.isEmpty(this.info.name)) {
+					this.$toast("标题不能为空");
+					return;
+				}
+				
 				// 如果有本地图片，则先进行上传
 				uni.showLoading();
 				if (this.isEdit) {

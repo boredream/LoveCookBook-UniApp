@@ -6,8 +6,10 @@ Vue.use(uView);
 // 工具类
 import stringUtil from './utils/string_util.js'
 import requestUtil from './utils/request_util.js'
+import toast from './utils/toast_util.js'
 Vue.prototype.$stringUtil = stringUtil
 Vue.prototype.$request = requestUtil
+Vue.prototype.$toast = toast
 
 // #ifndef VUE3
 import Vue from 'vue'

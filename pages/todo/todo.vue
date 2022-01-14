@@ -1,12 +1,12 @@
 <template>
 	<view>
 		<bd-fab @fabClick="add"></bd-fab>
-		<view class="textTopTip">已打卡{{progress}}/{{total}}次</view>
+		<view class="textTopTip">已打卡{{totalProgressStr}}次</view>
 		<view v-for="group in groupList">
 			<view class="llHor paddingHor groupContainer">
 				<image class="icon" src="../../static/ic_todo_cus.png"></image>
 				<view class="groupName">{{group.name}}</view>
-				<view class="textCaption grow">{{groupProgress(group)}}</view>
+				<view class="textCaption grow">{{progressStr(groupProgress(group))}}</view>
 				<u-icon name="more-dot-fill"></u-icon>
 			</view>
 			<view class="paddingHor">
@@ -14,7 +14,7 @@
 					<u-grid-item @click="toDetail(item)" v-for="item in group.todoList">
 						<image class="itemImage" :src="todoImage(item)" ></image>
 						<view class="itemName">{{item.name}}</view>
-						<view class="itemDate">{{item.todoDate}}</view>
+						<view class="itemDate">{{item.doneDate || ''}}</view>
 					</u-grid-item>
 					<u-grid-item @click="add()">
 						<image class="itemImage" src="../../static/ic_add_red.png"></image>
@@ -33,6 +33,7 @@
 	export default {
 		data() {
 			return {
+				totalProgressStr: "0/0",
 				groupList: [],
 				list: [],
 			};
@@ -44,16 +45,31 @@
 			groupProgress(group) {
 				var totalCount = 0;
 				var progressCount = 0;
-				for (var todo in group.todoList) {
+				for (var index in group.todoList) {
+					var todo = group.todoList[index];
 					totalCount++;
-					if (todo.isDone) {
+					if (todo.done) {
 						progressCount++;
 					}
 				}
-				return progressCount + "/" + totalCount;
+				return [progressCount, totalCount];
+			},
+			totalProgress() {
+				var totalCount = 0;
+				var progressCount = 0;
+				for (var groupIndex in this.groupList) {
+					var group = this.groupList[groupIndex];
+					var groupProgress = this.groupProgress(group);
+					progressCount += groupProgress[0];
+					totalCount += groupProgress[1];
+				}
+				return [progressCount, totalCount];
+			},
+			progressStr(progress) {
+				return progress[0] + "/" + progress[1];
 			},
 			todoImage(item) {
-				if(item.image == null) {
+				if(!item.done) {
 					return "../../static/ic_todo_lock.png"
 				}
 				return item.image;
@@ -73,25 +89,10 @@
 					path: "todo_group",
 					onSuccess: (res) => {
 						this.groupList = res;
-						this.computeTotalProgress();
+						this.totalProgressStr = this.progressStr(this.totalProgress());
 					}
 				});
 			},
-			computeTotalProgress() {
-				var totalCount = 0;
-				var progressCount = 0;
-				for (var group in this.groupList) {
-					if (group.todoList == null) continue;
-					for (var todo in group.todoList) {
-						totalCount++;
-						if (todo.isDone) {
-							progressCount++;
-						}
-					}
-				}
-				this.progress = progressCount;
-				this.total = totalCount;
-			}
 		},
 		/**
 		 * 下拉刷新回调函数
@@ -129,6 +130,7 @@
 		width: 72px;
 		height: 72px;
 		border-radius: 36px;
+		margin-top: 10px;
 		background-color: $color-default-gray;
 	}
 	
@@ -136,10 +138,12 @@
 		height: 34px;
 		font-size: $font-caption;
 		color: $font-color-black;
+		text-align: center;
 		margin-top: 14px;
 	}
 	
 	.itemDate {
+		height: 14px;
 		font-size: 10px;
 		color: $font-color-gray-light;
 	}

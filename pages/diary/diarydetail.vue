@@ -49,6 +49,16 @@
 				this.info.diaryDate = params;
 			},
 			commitData() {
+				if(this.$stringUtil.isEmpty(this.info.content)) {
+					this.$toast("日记内容不能为空");
+					return;
+				}
+				
+				if(this.$stringUtil.isEmpty(this.info.diaryDate)) {
+					this.$toast("日期不能为空");
+					return;
+				}
+				
 				// 如果有本地图片，则先进行上传
 				uni.showLoading();
 				imageUploadUtil.check4upload(this.imageList)

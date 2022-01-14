@@ -54,6 +54,15 @@
 		font-size: $font-caption;
 	}
 	
+	.textTopTip {
+		@extend .textBody;
+		height: 32px;
+		line-height: 32px;
+		width: 100%;
+		text-align: center;
+		background-color: #F4DBDA;
+	}
+	
 	.planceholder {
 		color: $font-color-gray-light;
 	}
