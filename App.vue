@@ -30,6 +30,10 @@
 		flex-direction: row;
 	}
 	
+	.grow {
+		flex-grow: 1;
+	}
+	
 	.textSubheadWhite {
 		color: #FFFFFF;
 		font-size: $font-subhead;
@@ -95,8 +99,8 @@
 	}
 	
 	.icon {
-		width: 24px;
-		height: 24px;
+		width: 16px;
+		height: 16px;
 	}
 
 </style>

@@ -4,7 +4,7 @@
 		<view class="input-picker">
 			<view class="textBody input-name">{{name}}</view>
 			<view class="input-value">{{initValue}}</view>
-			<image class="input-image" src="../../static/ic_right_arrow.png"></image>
+			<icon name="arrow-right"></icon>
 		</view>
 		<view class="dividerHor" style="margin-left: 20px;"></view>
 	</view>
