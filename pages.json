@@ -87,6 +87,18 @@
 				"navigationBarTitleText": "登录"
 			}
 
+		}, {
+			"path": "pages/feedback/feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈"
+			}
+
+		}, {
+			"path": "pages/about/about",
+			"style": {
+				"navigationBarTitleText": "关于我们"
+			}
+
 		}
 	],
 	"globalStyle": {

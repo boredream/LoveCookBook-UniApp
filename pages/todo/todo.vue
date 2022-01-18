@@ -12,7 +12,7 @@
 			<view class="paddingHor">
 				<u-grid col="4">
 					<u-grid-item @click="toItemDetail(item)" v-for="item in group.todoList">
-						<image class="itemImage" :src="todoImage(item)" ></image>
+						<image class="itemImage" mode="aspectFill" :src="todoImage(item)" ></image>
 						<view class="itemName">{{item.name}}</view>
 						<view class="itemDate">{{item.doneDate || ''}}</view>
 					</u-grid-item>
