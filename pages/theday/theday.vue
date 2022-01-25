@@ -9,7 +9,7 @@
 					<text class="textSubheadWhite" style="margin-left: 10px; margin-top: 20px;">天</text>
 				</view>
 				<view style="display: flex; flex-direction: row-reverse;">
-					<image class="imageOval" mode="aspectFill" style="margin-left: -12px;" :src="cpUserAvatar" />
+					<image class="imageOval" mode="aspectFill" style="margin-left: -12px;" :src="cpUserAvatar" @click="bindCp" />
 					<image class="imageOval" mode="aspectFill" :src="user.avatar" />
 				</view>
 			</view>
@@ -81,7 +81,7 @@
 				if (this.cpUser != null) {
 					this.cpUserAvatar = this.cpUser.avatar;
 				} else {
-					this.cpUserAvatar = "../../static/ic_add_primary.png";
+					this.cpUserAvatar = "../../static/ic_add_avatar.png";
 				}
 				this.setTogetherDays();
 			},
@@ -96,6 +96,13 @@
 				} else {
 					this.togatherTitle = "点我设置时间";
 					this.togatherDays = "1";
+				}
+			},
+			bindCp() {
+				if(this.cpUser == null) {
+					uni.navigateTo({
+						url: "../bindcp/bindcp"
+					})
 				}
 			},
 			confirm(params) {

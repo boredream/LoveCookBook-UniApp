@@ -100,7 +100,15 @@
 			}
 
 		}
-	],
+	    ,{
+            "path" : "pages/bindcp/bindcp",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "绑定另一半"
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "手册",

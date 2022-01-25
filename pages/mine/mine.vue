@@ -30,6 +30,8 @@
 </template>
 
 <script>
+	import userKeeper from "../../utils/user_keeper.js"
+	
 	export default {
 		data() {
 			return {
@@ -84,7 +86,9 @@
 				}
 			},
 			bindCp() {
-				
+				uni.navigateTo({
+					url: "../bindcp/bindcp",
+				})
 			},
 			unBindCp() {
 				this.$request.del({
