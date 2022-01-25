@@ -1,8 +1,8 @@
 <template>
-	<view class="content">
+	<view class="container llVer">
 		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">启动页</text>
+		<view class="textBody">
+			记录日常生活点滴
 		</view>
 	</view>
 </template>
@@ -69,5 +69,16 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
+	.container {
+		align-items: center;
+	}
+	
+	.logo {
+		margin-top: 200px;
+		margin-bottom: 16px;
+		width: 60px;
+		height: 60px;
+		border-radius: 4px;
+	}
 </style>
