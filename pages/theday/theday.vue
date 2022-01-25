@@ -53,13 +53,16 @@
 		},
 		mounted() {
 			this.$EventBus.$on('theDayChanged', () => {
-				console.log("刷新");
-				uni.startPullDownRefresh();
 				this.loadData(false);
-			})
+			});
+			this.$EventBus.$on('theCpChanged', () => {
+				this.setHeadInfo();
+				this.loadData(false);
+			});
 		},
 		beforeDestroy() {
-			this.$EventBus.$off('theDayChanged')
+			this.$EventBus.$off('theDayChanged');
+			this.$EventBus.$off('theCpChanged');
 		},
 		data() {
 			return {

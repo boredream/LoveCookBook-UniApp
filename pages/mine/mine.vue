@@ -30,7 +30,8 @@
 </template>
 
 <script>
-	import userKeeper from "../../utils/user_keeper.js"
+	import userKeeper from "../../utils/user_keeper.js";
+	import tokenKeeper from "../../utils/token_keeper.js";
 	
 	export default {
 		data() {
@@ -43,33 +44,26 @@
 		onLoad() {
 			this.getUserInfoFromLocal();
 		},
+		mounted() {
+			this.$EventBus.$on('theCpChanged', () => {
+				this.getUserInfoFromLocal();
+			});
+		},
+		beforeDestroy() {
+			this.$EventBus.$off('theCpChanged');
+		},
 		methods: {
 			getUserInfoFromLocal() {
-				uni.getStorage({
-					key: "user",
-					success: (res) => {
-						console.log("get user from local = " + JSON.stringify(res));
-						this.user = res.data;
-						this.cpUser = this.user.cpUser;
+				this.user = userKeeper.get();
+				this.cpUser = this.user.cpUser;
 
-						if (this.cpUser != null) {
-							this.cpUserAvatar = this.cpUser.avatar;
-							this.cpBindAction = "解绑";
-						} else {
-							this.cpUserAvatar = null;
-							this.cpBindAction = "绑定";
-						}
-					}
-				});
-			},
-			getUserInfoFromRemote() {
-				this.$request.get({
-					path: "user/info",
-					onSuccess: (res) => {
-						userKeeper.save(res);
-						this.getUserInfoFromLocal();
-					}
-				});
+				if (this.cpUser != null) {
+					this.cpUserAvatar = this.cpUser.avatar;
+					this.cpBindAction = "解绑";
+				} else {
+					this.cpUserAvatar = null;
+					this.cpBindAction = "绑定";
+				}
 			},
 			toggleBindCp() {
 				if(this.cpBindAction == "解绑") {
@@ -95,7 +89,9 @@
 					path: "user/cp",
 					id: this.user.cpUser.id,
 					onSuccess: (res) => {
-						this.getUserInfoFromRemote();
+						this.user.cpUser = null;
+						userKeeper.save(this.user);
+						this.$EventBus.$emit("theCpChanged");
 					}
 				});
 			},
@@ -111,12 +107,8 @@
 			},
 			logout() {
 				console.log("logout");
-				uni.removeStorage({
-					key: "user"
-				});
-				uni.removeStorage({
-					key: "token"
-				});
+				userKeeper.clear();
+				tokenKeeper.clear();
 				uni.navigateTo({
 					url: "../login/login",
 				});

@@ -43,12 +43,15 @@
 		},
 		mounted() {
 			this.$EventBus.$on('todoChanged', () => {
-				console.log("刷新");
 				this.loadData();
-			})
+			});
+			this.$EventBus.$on('theCpChanged', () => {
+				this.loadData();
+			});
 		},
 		beforeDestroy() {
-			this.$EventBus.$off('todoChanged')
+			this.$EventBus.$off('todoChanged');
+			this.$EventBus.$off('theCpChanged');
 		},
 		methods: {
 			groupProgress(group) {

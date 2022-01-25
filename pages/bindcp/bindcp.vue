@@ -4,7 +4,7 @@
 		<view class="inviteCard llVer paddingHor" style="margin: 20px; padding-top: 60px;">
 			<view class="textBody">我的专属邀请码</view>
 			<view class="llHor" style="justify-content: center; align-items: center; margin-top: 8px;">
-				<view class="textSubhead" style="font-size: 36px; margin-right: 4px;">000001</view>
+				<view class="textSubhead" style="font-size: 36px; margin-right: 4px;">{{myInviteCode}}</view>
 				<image class="icon" src="../../static/ic_copy.png"></image>
 			</view>
 			<view class="llHor" style="margin-top: 24px; align-items: center;">
@@ -14,21 +14,64 @@
 			</view>
 			<view class="inputBar llHor">
 				<input placeholder="填写TA的邀请码" v-model="inviteCode" />
-				<button class="btnPrimary">开通</button>
+				<button class="btnPrimary" @click="bindCp">开通</button>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import userKeeper from "../../utils/user_keeper.js"
+	
 	export default {
 		data() {
 			return {
-				inviteCode: "",
+				user: {},
+				myInviteCode: null,
+				inviteCode: null,
 			}
 		},
+		onLoad() {
+			this.getUserInfoFromLocal();
+		},
 		methods: {
-
+			getUserInfoFromLocal() {
+				uni.getStorage({
+					key: "user",
+					success: (res) => {
+						console.log("get user from local = " + JSON.stringify(res));
+						this.user = res.data;
+						
+						var myInviteCode = this.user.id;
+						for(var i=0; i < (9 - myInviteCode.toString().length); i++) {
+							myInviteCode = "0" + myInviteCode;
+						}
+						this.myInviteCode = myInviteCode;
+					}
+				});
+			},
+			bindCp() {
+				if(this.$stringUtil.isEmpty(this.inviteCode)) {
+					this.$toast("TA的邀请码不能为空");
+					return;
+				}
+				
+				var inviteCode = parseInt(this.inviteCode);
+				
+				this.$request.put({
+					path: "user/cp",
+					id: inviteCode,
+					onSuccess: (res)=> {
+						// save cp user
+						this.user.cpUser = res;
+						userKeeper.save(this.user);
+						
+						this.$toast("绑定成功");
+						this.$EventBus.$emit("theCpChanged");
+						uni.navigateBack();
+					} 
+				});
+			},
 		}
 	}
 </script>

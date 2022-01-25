@@ -56,12 +56,15 @@
 		},
 		mounted() {
 			this.$EventBus.$on('diaryChanged', () => {
-				console.log("刷新");
 				this.loadData(false);
-			})
+			});
+			this.$EventBus.$on('theCpChanged', () => {
+				this.loadData(false);
+			});
 		},
 		beforeDestroy() {
-			this.$EventBus.$off('diaryChanged')
+			this.$EventBus.$off('diaryChanged');
+			this.$EventBus.$off('theCpChanged');
 		},
 		methods: {
 			getDay(date) {
