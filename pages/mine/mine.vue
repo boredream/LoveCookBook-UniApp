@@ -109,7 +109,7 @@
 				console.log("logout");
 				userKeeper.clear();
 				tokenKeeper.clear();
-				uni.navigateTo({
+				uni.reLaunch({
 					url: "../login/login",
 				});
 			},

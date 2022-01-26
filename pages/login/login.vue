@@ -28,7 +28,7 @@
 		methods: {
 			route2main() {
 				uni.switchTab({
-					url: "../diary/diary",
+					url: "../theday/theday",
 				});
 			},
 			getUserInfo() {
@@ -37,7 +37,7 @@
 					onSuccess: (res) => {
 						userKeeper.save(res);
 						this.route2main();
-						console.log("getUserInfo success = " + res);
+						console.log("getUserInfo success = " + JSON.stringify(res));
 					}
 				});
 			},
@@ -67,11 +67,15 @@
 								success: (authCode) => {
 									// step3. 通过code获取微信openId，并完成登录/注册，最终生成token
 									console.log("step3. 通过code获取微信openId，并完成登录/注册，最终生成token " + authCode);
-									request.post("user/wxlogin", authCode, (token) => {
-										console.log("wx login success = " + token);
-										tokenKeeper.save(token);
-										// step4. 获取用户信息，完成登录流程，跳转页面
-										this.getUserInfo();
+									this.$request.post({
+										path: "user/wxlogin",
+										data: authCode,
+										onSuccess: (token) => {
+											console.log("wx login success = " + token);
+											tokenKeeper.save(token);
+											// step4. 获取用户信息，完成登录流程，跳转页面
+											this.getUserInfo();
+										}
 									});
 								},
 								fail: () => {

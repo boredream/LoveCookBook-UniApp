@@ -20,12 +20,12 @@
 			if (token != null && token.length > 0) {
 				this.getUserInfo();
 			} else {
-				this.appLoginWx();
+				this.route2login();
 			}
 		},
 		methods: {
 			route2login() {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: "../login/login",
 				});
 			},
@@ -44,27 +44,7 @@
 						this.route2main();
 					}
 				});
-			},
-			appLoginWx() {
-				console.log("wx授权登录，获取code");
-				uni.login({
-					provider: 'weixin',
-					success: (authCode) => {
-						console.log("通过code获取微信openId，并完成登录/注册，最终生成token " + authCode);
-						this.$request.post("user/wxlogin", authCode, (token) => {
-							console.log("wx login success = " + token);
-							token.save(token);
-							this.getUserInfo();
-						});
-					},
-					fail: () => {
-						uni.showToast({
-							title: "微信登录授权失败",
-							icon: "none"
-						});
-					}
-				});
-			},
+			}
 		}
 	}
 </script>
