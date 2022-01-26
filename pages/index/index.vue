@@ -20,6 +20,7 @@
 			if (token != null && token.length > 0) {
 				this.getUserInfo();
 			} else {
+				// 直接引导微信登录
 				this.route2login();
 			}
 		},
@@ -32,6 +33,47 @@
 			route2main() {
 				uni.switchTab({
 					url: "../theday/theday",
+				});
+			},
+			appLoginWx() {
+				// step1. 检测手机上是否安装微信
+				console.log("step1. 检测手机上是否安装微信");
+				uni.getProvider({
+					service: 'oauth',
+					success: (res) => {
+						if (~res.provider.indexOf('weixin')) {
+							// step2. wx授权登录，获取code
+							console.log("step2. wx授权登录，获取code");
+							uni.login({
+								provider: 'weixin',
+								success: (authCode) => {
+									// step3. 通过code获取微信openId，并完成登录/注册，最终生成token
+									console.log("step3. 通过code获取微信openId，并完成登录/注册，最终生成token " +
+										authCode);
+									this.$request.post({
+										path: "user/wxlogin",
+										data: authCode,
+										onSuccess: (token) => {
+											console.log("wx login success = " + token);
+											tokenKeeper.save(token);
+											// step4. 获取用户信息，完成登录流程，跳转页面
+											this.getUserInfo();
+										}
+									});
+								},
+								fail: () => {
+									uni.showToast({
+										title: "微信登录授权失败",
+										icon: "none"
+									});
+								}
+							});
+						} else {
+							uni.showToast({
+								title: '请先安装微信或升级版本'
+							});
+						}
+					}
 				});
 			},
 			getUserInfo() {
@@ -53,7 +95,7 @@
 	.container {
 		align-items: center;
 	}
-	
+
 	.logo {
 		margin-top: 200px;
 		margin-bottom: 16px;
