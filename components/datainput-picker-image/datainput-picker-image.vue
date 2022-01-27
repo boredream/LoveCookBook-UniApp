@@ -40,14 +40,13 @@
 					count: 1,
 					sizeType: ["compressed"],
 					success: (res) => {
-						console.log(JSON.stringify(res.tempFilePaths[0]));
 						this.image = res.tempFilePaths[0]
 						this.onImageChanged();
 					}
 				});
 			},
 			onImageChanged() {
-				this.$emit('onImageChanged', this.image);
+				this.$emit('onSelected', this.image);
 			},
 		}
 	}

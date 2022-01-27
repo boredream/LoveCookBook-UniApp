@@ -9,6 +9,7 @@
 			mode="date" 
 			v-model="initDate"
 			closeOnClickOverlay
+			minDate="0"
 			@confirm="confirm"
 			@cancel="cancel">
 		</u-datetime-picker>

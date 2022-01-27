@@ -10,6 +10,8 @@ export default {
  * @param {Array} imageList u-upload 的图片集合 this.$refs.uUpload.lists;
  */
 async function check4upload(imageList) {
+	console.log("check4upload" + JSON.stringify(imageList));
+	
 	// 过滤本地图片，需要进行上传
 	var localImageList = [];
 	for (let i in imageList) {

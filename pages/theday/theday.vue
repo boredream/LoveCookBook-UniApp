@@ -52,6 +52,9 @@
 			this.setHeadInfo();
 		},
 		mounted() {
+			this.$EventBus.$on('theUserChanged', () => {
+				this.setHeadInfo();
+			});
 			this.$EventBus.$on('theDayChanged', () => {
 				this.loadData(false);
 			});

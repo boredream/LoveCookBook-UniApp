@@ -2,7 +2,7 @@
 	<view>
 		<!-- 头 -->
 		<view class="paddingHor header llVer">
-			<image class="imageOval" mode="aspectFill" :src="user.avatar" />
+			<image @click="editUserInfo" class="imageOval" mode="aspectFill" :src="user.avatar" />
 			<view class="textName">{{user.nickname}}</view>
 			<view class="textId">ID:{{user.id}}</view>
 		</view>
@@ -45,6 +45,9 @@
 			this.getUserInfoFromLocal();
 		},
 		mounted() {
+			this.$EventBus.$on('theUserChanged', () => {
+				this.getUserInfoFromLocal();
+			});
 			this.$EventBus.$on('theCpChanged', () => {
 				this.getUserInfoFromLocal();
 			});
@@ -64,6 +67,11 @@
 					this.cpUserAvatar = null;
 					this.cpBindAction = "绑定";
 				}
+			},
+			editUserInfo() {
+				uni.navigateTo({
+					url: "../userinfo/userinfo"
+				})
 			},
 			toggleBindCp() {
 				if(this.cpBindAction == "解绑") {

@@ -8,6 +8,11 @@
 
 <script>
 	export default {
+		onLoad(options) {
+			if (options.value != null) {
+				this.value = decodeURIComponent(options.value);
+			}
+		},
 		data() {
 			return {
 				value: "",
@@ -20,7 +25,13 @@
 					return;
 				}
 
-				this.$EventBus.$emit('datainputEditChanged', {
+				// #ifdef APP-NVUE
+				const eventChannel = this.$scope.eventChannel; // 兼容APP-NVUE
+				// #endif
+				// #ifndef APP-NVUE
+				const eventChannel = this.getOpenerEventChannel();
+				// #endif
+				eventChannel.emit('acceptDataFromOpenedPage', {
 					value: this.value
 				});
 				uni.navigateBack();

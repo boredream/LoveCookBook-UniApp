@@ -36,7 +36,7 @@
 	}
 
 	.logo {
-		margin-top: 200px;
+		margin-top: 120px;
 		margin-bottom: 16px;
 		width: 60px;
 		height: 60px;
