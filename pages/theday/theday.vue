@@ -10,7 +10,7 @@
 				</view>
 				<view style="display: flex; flex-direction: row-reverse;">
 					<image class="imageOval" mode="aspectFill" style="margin-left: -12px;" :src="cpUserAvatar" @click="bindCp" />
-					<image class="imageOval" mode="aspectFill" :src="user.avatar" />
+					<image class="imageOval" mode="aspectFill" :src="user.avatar" @click="editUserInfo"/>
 				</view>
 			</view>
 		</view>
@@ -107,6 +107,11 @@
 						url: "../bindcp/bindcp"
 					})
 				}
+			},
+			editUserInfo() {
+				uni.navigateTo({
+					url: "../userinfo/userinfo"
+				})
 			},
 			confirm(params) {
 				var date = uni.$u.timeFormat(params.value, 'yyyy-mm-dd');

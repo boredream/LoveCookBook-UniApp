@@ -108,6 +108,22 @@
             }
             
         }
+        ,{
+            "path" : "pages/userinfo/userinfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人资料"
+            }
+            
+        }
+        ,{
+            "path" : "pages/datainputedit/datainputedit",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": ""
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -4,9 +4,11 @@
 		<view class="input-picker">
 			<view class="textBody input-name">{{name}}</view>
 			<view class="input-value">{{initValue}}</view>
-			<icon name="arrow-right"></icon>
+			<view style="margin-left: 8px;">
+				<u-icon size="10px" name="arrow-right"></u-icon>
+			</view>
 		</view>
-		<view class="dividerHor" style="margin-left: 20px;"></view>
+		<view class="dividerHor" style="margin-left: 20px; "></view>
 	</view>
 </template>
 
@@ -34,11 +36,11 @@
 		flex-direction: row;
 		align-items: center;
 	}
-	
+
 	.input-name {
 		flex-grow: 1;
 	}
-	
+
 	.input-value {
 		font-size: $font-caption;
 		color: $font-color-gray;
