@@ -13,7 +13,7 @@
 				<view class="dividerHor grow"></view>
 			</view>
 			<view class="inputBar llHor">
-				<input placeholder="填写TA的邀请码" v-model="inviteCode" />
+				<input type="number" class="grow" placeholder="填写TA的邀请码" placeholder-class="planceholder" v-model="inviteCode" />
 				<button class="btnPrimary" @click="bindCp">开通</button>
 			</view>
 		</view>
@@ -95,11 +95,12 @@
 		align-items: center;
 		box-shadow: 0px 2px 6px rgba(251, 101, 101, 0.2);
 		height: 52px;
-		text-align: center;
 
 		input {
+			text-align: left;
 			height: 52px;
 			line-height: 52px;
+			padding-left: 24px;
 			font-size: $font-subhead;
 			color: $font-color-gray;
 		}

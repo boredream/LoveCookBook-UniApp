@@ -13,11 +13,12 @@
 				<u-grid col="4">
 					<u-grid-item @click="toItemDetail(item)" v-for="item in group.todoList">
 						<image class="itemImage" mode="aspectFill" :src="todoImage(item)" ></image>
+						<view class="itemDate">{{item.doneDate || '未完成'}}</view>
 						<view class="itemName">{{item.name}}</view>
-						<view class="itemDate">{{item.doneDate || ''}}</view>
 					</u-grid-item>
 					<u-grid-item @click="addItem(group)">
 						<image class="itemImage" src="../../static/ic_add_red.png"></image>
+						<view class="itemDate"></view>
 						<view class="itemName"></view>
 					</u-grid-item>
 				</u-grid>
@@ -84,10 +85,13 @@
 				if(!item.done) {
 					return "../../static/ic_todo_lock.png"
 				}
+				if(this.$stringUtil.isEmpty(item.images)) {
+					return "../../static/img_todo_done_default.png";
+				}
 				if(this.$stringUtil.contains(item.images, ',')) {
 					return item.images.split(',')[0];
 				}
-				return item.image;
+				return item.images;
 			},
 			addGroup() {
 				uni.navigateTo({
@@ -154,7 +158,10 @@
 	.itemImage {
 		width: 72px;
 		height: 72px;
-		border-radius: 36px;
+		border-radius: 50%;
+		border-width: 1px;
+		border-color: $color-default-gray;
+		border-style: solid;
 		margin-top: 10px;
 		background-color: $color-default-gray;
 	}
@@ -164,10 +171,11 @@
 		font-size: $font-caption;
 		color: $font-color-black;
 		text-align: center;
-		margin-top: 14px;
+		margin-top: 4px;
 	}
 	
 	.itemDate {
+		margin-top: 4px;
 		height: 14px;
 		font-size: 10px;
 		color: $font-color-gray-light;

@@ -64,7 +64,7 @@
 	}
 	
 	.planceholder {
-		color: $font-color-gray-light;
+		color: #cccccc;
 	}
 	
 	.btnPrimary {
