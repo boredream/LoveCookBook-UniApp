@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<datainput-picker-image name="头像" :initImage="user.avatar" @onSelected="onImageSelected" />
 		<datainput-edit name="昵称" :initValue="user.nickname" />
 		<datainput-picker-list name="性别" :initValue="user.gender" :columns="genderList" @onSelected="onGenderSelected" />
 		<datainput-picker-date name="生日" :initValue="user.birthday" @onSelected="onDateSelected" />
@@ -8,7 +9,12 @@
 </template>
 
 <script>
+	import userKeeper from "../../utils/user_keeper.js"
+	
 	export default {
+		onLoad() {
+			this.user = userKeeper.get();
+		},
 		data() {
 			return {
 				showDate: false,
@@ -17,6 +23,9 @@
 			}
 		},
 		methods: {
+			onImageChanged(params) {
+				this.user.avatar = params;
+			},
 			onGenderSelected(params) {
 				this.user.gender = params;
 			},

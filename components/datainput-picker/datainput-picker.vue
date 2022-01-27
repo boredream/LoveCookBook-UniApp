@@ -45,10 +45,4 @@
 		font-size: $font-caption;
 		color: $font-color-gray;
 	}
-
-	.input-image {
-		margin-left: 6px;
-		width: 6px;
-		height: 10px;
-	}
 </style>
