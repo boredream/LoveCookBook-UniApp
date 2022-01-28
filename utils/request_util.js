@@ -6,8 +6,8 @@ export default {
 	del
 }
 
-const HOST = 'https://www.papikoala.cn/api/';
-// const HOST = 'http://localhost:8080/api/';
+// const HOST = 'https://www.papikoala.cn/api/';
+const HOST = 'http://localhost:8080/api/';
 
 import tokenUtil from "./token_keeper.js"
 
@@ -42,6 +42,10 @@ function del(params) {
 }
 
 function request(params) {
+	if(params.data != null) {
+		params.data["platform"] = "wx";
+	}
+	
 	uni.showLoading();
 	uni.request({
 		method: params.method,
@@ -103,11 +107,13 @@ function defaultOnFail(error) {
 	if (error.data.status >= 400 && error.data.status < 500) {
 		// token
 		uni.showToast({
+			icon: "none",
 			title: "登录已过期"
 		});
-		uni.navigateTo({
-			url: "/pages/login/login",
+	} else {
+		uni.showToast({
+			icon: "none",
+			title: error.data.msg,
 		});
-		return;
 	}
 }

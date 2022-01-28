@@ -2,7 +2,7 @@
 	<view class="container llVer">
 		<image class="logo" src="/static/logo.png"></image>
 		<view class="textBody">
-			记录日常生活点滴
+			记录恋爱生活点滴
 		</view>
 	</view>
 </template>
@@ -20,16 +20,11 @@
 			if (token != null && token.length > 0) {
 				this.getUserInfo();
 			} else {
-				// 直接引导微信登录
-				this.route2login();
+				// 微信要求开发未登录体验，先进入主页
+				this.route2main();
 			}
 		},
 		methods: {
-			route2login() {
-				uni.redirectTo({
-					url: "../login/login",
-				});
-			},
 			route2main() {
 				uni.switchTab({
 					url: "../theday/theday",

@@ -3,8 +3,8 @@
 		<!-- 头 -->
 		<view class="paddingHor header llVer">
 			<image @click="editUserInfo" class="imageOval" mode="aspectFill" :src="user.avatar" />
-			<view class="textName">{{user.nickname}}</view>
-			<view class="textId">ID:{{user.id}}</view>
+			<view class="textName">{{user.nickname || "未登录"}}</view>
+			<view v-if="user" class="textId">ID:{{user.id}}</view>
 		</view>
 
 		<!-- 列表 -->
@@ -25,7 +25,7 @@
 		</view>
 		<view style="margin-left: 20px;" class="dividerHor"></view>
 
-		<button class="btnPrimary btnLogout" @click="logout">退出登录</button>
+		<button v-if="user" class="btnPrimary btnLogout" @click="logout">退出登录</button>
 	</view>
 </template>
 
@@ -69,11 +69,15 @@
 				}
 			},
 			editUserInfo() {
+				if(!this.$userKeeper.checkLogin()) return;
+				
 				uni.navigateTo({
 					url: "../userinfo/userinfo"
 				})
 			},
 			toggleBindCp() {
+				if(!this.$userKeeper.checkLogin()) return;
+				
 				if(this.cpBindAction == "解绑") {
 					uni.showModal({
 						content: "是否确认接触绑定？",
@@ -109,6 +113,8 @@
 				})
 			},
 			feedBack() {
+				if(!this.$userKeeper.checkLogin()) return;
+				
 				uni.navigateTo({
 					url: "../feedback/feedback",
 				})

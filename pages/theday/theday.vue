@@ -10,7 +10,7 @@
 				</view>
 				<view style="display: flex; flex-direction: row-reverse;">
 					<image class="imageOval" mode="aspectFill" style="margin-left: -12px;" :src="cpUserAvatar" @click="bindCp" />
-					<image class="imageOval" mode="aspectFill" :src="user.avatar" @click="editUserInfo"/>
+					<image class="imageOval" mode="aspectFill" :src="userAvatar" @click="editUserInfo"/>
 				</view>
 			</view>
 		</view>
@@ -44,7 +44,6 @@
 
 <script>
 	import dateUtil from "../../utils/date_util.js";
-	import userKeeper from "../../utils/user_keeper.js"
 
 	export default {
 		onLoad() {
@@ -73,18 +72,21 @@
 				togatherTitle: "",
 				togatherDays: "1",
 				togatherDate: Number(new Date()),
-				user: {},
-				cpUser: {},
+				user: null,
+				cpUser: null,
+				userAvatar: "",
 				cpUserAvatar: "",
 				list: [],
 			}
 		},
 		methods: {
 			setHeadInfo() {
-				this.user = userKeeper.get();
-				this.cpUser = this.user.cpUser;
-
-				if (this.cpUser != null) {
+				this.user = this.$userKeeper.get();
+				if(!this.user) {
+					this.userAvatar = "../../static/avatar_girl.png";
+				}
+				
+				if(this.user && this.user.cpUser) {
 					this.cpUserAvatar = this.cpUser.avatar;
 				} else {
 					this.cpUserAvatar = "../../static/ic_add_avatar.png";
@@ -92,8 +94,7 @@
 				this.setTogetherDays();
 			},
 			setTogetherDays() {
-				var cpTogetherDate = this.user.cpTogetherDate;
-				if (cpTogetherDate != null) {
+				if (this.user && this.user.cpTogetherDate) {
 					this.togatherTitle = "我们已恋爱";
 					var date = dateUtil.str2date(cpTogetherDate);
 					var days = dateUtil.calculateDayDiff(new Date(), date);
@@ -105,6 +106,7 @@
 				}
 			},
 			bindCp() {
+				if(!this.$userKeeper.checkLogin()) return;
 				if(this.cpUser == null) {
 					uni.navigateTo({
 						url: "../bindcp/bindcp"
@@ -112,6 +114,7 @@
 				}
 			},
 			editUserInfo() {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../userinfo/userinfo"
 				})
@@ -126,7 +129,7 @@
 					},
 					onSuccess: (res) => {
 						this.user.cpTogetherDate = date;
-						userKeeper.save(this.user);
+						this.$userKeeper.save(this.user);
 						this.setTogetherDays();
 						this.showDate = false;
 						uni.showToast({
@@ -159,9 +162,17 @@
 				}
 			},
 			pickTogetherDays() {
+				if(!this.$userKeeper.checkLogin()) return;
 				this.showDate = true;
 			},
 			loadData(loadMore) {
+				if(!this.user) {
+					this.list.push({
+						"name": "[示例] TA的生日"
+					});
+					return;
+				}
+				
 				var requestPage = loadMore ? this.curPage + 1 : 1;
 				this.$request.get({
 					path: "the_day/page",
@@ -179,11 +190,13 @@
 				});
 			},
 			add() {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../theday/thedaydetail"
 				})
 			},
 			toDetail(item) {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../theday/thedaydetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})

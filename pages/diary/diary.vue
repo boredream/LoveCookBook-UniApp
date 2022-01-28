@@ -77,16 +77,30 @@
 				return date.split("-")[0] + "年" + date.split("-")[1] + "月";
 			},
 			add() {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../diary/diarydetail",
 				})
 			},
 			toDetail(item) {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../diary/diarydetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})
 			},
 			loadData(loadMore) {
+				if(!this.user) {
+					this.list.push({
+						content: "[示例] 今天真是个好日子啊，要记下来！",
+						diaryDate: "2012-12-21",
+						user: {
+							avatar: "../../static/avatar_girl.png",
+							nickname: "恋爱手册",
+						}
+					});
+					return;
+				}
+				
 				var requestPage = loadMore ? this.curPage + 1 : 1;
 				this.$request.get({
 					path: "diary/page",

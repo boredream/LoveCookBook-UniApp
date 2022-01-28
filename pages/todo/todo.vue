@@ -12,7 +12,7 @@
 			<view class="paddingHor">
 				<u-grid col="4">
 					<u-grid-item @click="toItemDetail(item)" v-for="item in group.todoList">
-						<image class="itemImage" mode="aspectFill" :src="todoImage(item)" ></image>
+						<image class="itemImage" mode="aspectFill" :src="todoImage(item)"></image>
 						<view class="itemDate">{{item.doneDate || '未完成'}}</view>
 						<view class="itemName">{{item.name}}</view>
 					</u-grid-item>
@@ -30,7 +30,6 @@
 
 <script>
 	import dateUtil from "../../utils/date_util.js";
-
 	export default {
 		data() {
 			return {
@@ -82,13 +81,13 @@
 				return progress[0] + "/" + progress[1];
 			},
 			todoImage(item) {
-				if(!item.done) {
+				if (!item.done) {
 					return "../../static/ic_todo_lock.png"
 				}
-				if(this.$stringUtil.isEmpty(item.images)) {
+				if (this.$stringUtil.isEmpty(item.images)) {
 					return "../../static/img_todo_done_default.png";
 				}
-				if(this.$stringUtil.contains(item.images, ',')) {
+				if (this.$stringUtil.contains(item.images, ',')) {
 					return item.images.split(',')[0];
 				}
 				return item.images;
@@ -114,6 +113,16 @@
 				})
 			},
 			loadData() {
+				if (!this.user) {
+					this.groupList.push({
+						name: "[示例] 恋人要一起做的事集合",
+						todoList: [{
+							name: "一起去K歌"
+						}]
+					});
+					return;
+				}
+
 				this.$request.get({
 					path: "todo_group",
 					onSuccess: (res) => {
@@ -150,11 +159,9 @@
 		margin-left: 6px;
 		margin-right: 6px;
 	}
-	
-	.itemContainer {
-		
-	}
-	
+
+	.itemContainer {}
+
 	.itemImage {
 		width: 72px;
 		height: 72px;
@@ -165,7 +172,7 @@
 		margin-top: 10px;
 		background-color: $color-default-gray;
 	}
-	
+
 	.itemName {
 		height: 34px;
 		font-size: $font-caption;
@@ -173,7 +180,7 @@
 		text-align: center;
 		margin-top: 4px;
 	}
-	
+
 	.itemDate {
 		margin-top: 4px;
 		height: 14px;

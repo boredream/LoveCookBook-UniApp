@@ -16,7 +16,6 @@
 <script>
 	import imageUploadUtil from "../../utils/image_upload_util.js";
 	import dateUtil from "../../utils/date_util.js";
-
 	export default {
 		onLoad(options) {
 			if (options.data != null) {
@@ -89,6 +88,7 @@
 					}).catch((error) => {
 						uni.hideLoading();
 						uni.showToast({
+							icon: "none",
 							title: "图片上传失败，请重新提交"
 						});
 						console.log("图片上传失败 " + error);

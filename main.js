@@ -6,10 +6,12 @@ Vue.use(uView);
 // 工具类
 import stringUtil from './utils/string_util.js'
 import requestUtil from './utils/request_util.js'
+import userKeeper from './utils/user_keeper.js'
 import toast from './utils/toast_util.js'
 Vue.prototype.$stringUtil = stringUtil
 Vue.prototype.$request = requestUtil
 Vue.prototype.$toast = toast
+Vue.prototype.$userKeeper = userKeeper
 
 // event bus
 Vue.prototype.$EventBus = new Vue()
