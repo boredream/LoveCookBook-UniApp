@@ -52,6 +52,7 @@
 			};
 		},
 		onLoad() {
+			this.user = this.$userKeeper.get();
 			this.loadData(false);
 		},
 		mounted() {
@@ -90,14 +91,15 @@
 			},
 			loadData(loadMore) {
 				if(!this.user) {
-					this.list.push({
+					this.list = [{
 						content: "[示例] 今天真是个好日子啊，要记下来！",
 						diaryDate: "2012-12-21",
 						user: {
 							avatar: "../../static/avatar_girl.png",
 							nickname: "恋爱手册",
 						}
-					});
+					}];
+					uni.stopPullDownRefresh();
 					return;
 				}
 				

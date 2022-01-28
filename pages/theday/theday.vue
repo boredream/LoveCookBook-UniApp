@@ -44,11 +44,13 @@
 
 <script>
 	import dateUtil from "../../utils/date_util.js";
+	import imageUtil from "../../utils/image_util.js";
 
 	export default {
 		onLoad() {
-			this.loadData(false);
+			this.user = this.$userKeeper.get();
 			this.setHeadInfo();
+			this.loadData(false);
 		},
 		mounted() {
 			this.$EventBus.$on('theUserChanged', () => {
@@ -81,13 +83,10 @@
 		},
 		methods: {
 			setHeadInfo() {
-				this.user = this.$userKeeper.get();
-				if(!this.user) {
-					this.userAvatar = "../../static/avatar_girl.png";
-				}
+				this.userAvatar = imageUtil.getUserAvatar(this.user);
 				
-				if(this.user && this.user.cpUser) {
-					this.cpUserAvatar = this.cpUser.avatar;
+				if(this.user != null && this.user.cpUser != null) {
+					this.cpUserAvatar = imageUtil.getUserAvatar(this.user.cpUser);
 				} else {
 					this.cpUserAvatar = "../../static/ic_add_avatar.png";
 				}
@@ -167,9 +166,10 @@
 			},
 			loadData(loadMore) {
 				if(!this.user) {
-					this.list.push({
+					this.list = [{
 						"name": "[示例] TA的生日"
-					});
+					}];
+					uni.stopPullDownRefresh();
 					return;
 				}
 				

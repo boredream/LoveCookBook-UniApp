@@ -17,7 +17,7 @@
 						<view class="itemName">{{item.name}}</view>
 					</u-grid-item>
 					<u-grid-item @click="addItem(group)">
-						<image class="itemImage" src="../../static/ic_add_red.png"></image>
+						<image class="itemImage" src="../../static/ic_add_todo.png"></image>
 						<view class="itemDate"></view>
 						<view class="itemName"></view>
 					</u-grid-item>
@@ -39,6 +39,7 @@
 			};
 		},
 		onLoad() {
+			this.user = this.$userKeeper.get();
 			this.loadData();
 		},
 		mounted() {
@@ -93,33 +94,38 @@
 				return item.images;
 			},
 			addGroup() {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../todo/todogroupdetail",
 				})
 			},
 			toGroupDetail(item) {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../todo/todogroupdetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})
 			},
 			addItem(group) {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../todo/tododetail?todoGroupId=" + group.id,
 				})
 			},
 			toItemDetail(item) {
+				if(!this.$userKeeper.checkLogin()) return;
 				uni.navigateTo({
 					url: "../todo/tododetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})
 			},
 			loadData() {
 				if (!this.user) {
-					this.groupList.push({
+					this.groupList = [{
 						name: "[示例] 恋人要一起做的事集合",
 						todoList: [{
 							name: "一起去K歌"
 						}]
-					});
+					}];
+					uni.stopPullDownRefresh();
 					return;
 				}
 
