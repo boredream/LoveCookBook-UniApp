@@ -46,13 +46,14 @@
 			this.$EventBus.$on('todoChanged', () => {
 				this.loadData();
 			});
-			this.$EventBus.$on('theCpChanged', () => {
+			this.$EventBus.$on('theUserChanged', () => {
+				this.user = this.$userKeeper.get();
 				this.loadData();
 			});
 		},
 		beforeDestroy() {
 			this.$EventBus.$off('todoChanged');
-			this.$EventBus.$off('theCpChanged');
+			this.$EventBus.$off('theUserChanged');
 		},
 		methods: {
 			groupProgress(group) {

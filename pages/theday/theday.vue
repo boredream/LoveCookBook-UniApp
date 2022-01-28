@@ -53,20 +53,22 @@
 			this.loadData(false);
 		},
 		mounted() {
-			this.$EventBus.$on('theUserChanged', () => {
+			this.$EventBus.$on('theUserInfoChanged', () => {
 				this.setHeadInfo();
 			});
 			this.$EventBus.$on('theDayChanged', () => {
 				this.loadData(false);
 			});
-			this.$EventBus.$on('theCpChanged', () => {
+			this.$EventBus.$on('theUserChanged', () => {
+				this.user = this.$userKeeper.get();
 				this.setHeadInfo();
 				this.loadData(false);
 			});
 		},
 		beforeDestroy() {
+			this.$EventBus.$off('theUserInfoChanged');
 			this.$EventBus.$off('theDayChanged');
-			this.$EventBus.$off('theCpChanged');
+			this.$EventBus.$off('theUserChanged');
 		},
 		data() {
 			return {

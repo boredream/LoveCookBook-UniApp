@@ -38,15 +38,19 @@
 		},
 		methods: {
 			route2main() {
-				uni.switchTab({
-					url: "../theday/theday",
-				});
+				// uni.switchTab({
+				// 	url: "../theday/theday",
+				// });
+				
+				// 可以体验进入，所以一般都是其它页面过来的，直接关闭
+				uni.navigateBack();
 			},
 			getUserInfo() {
 				this.$request.get({
 					path: "user/info",
 					onSuccess: (res) => {
 						userKeeper.save(res);
+						this.$EventBus.$emit("theUserChanged");
 						this.route2main();
 						console.log("getUserInfo success = " + JSON.stringify(res));
 					}

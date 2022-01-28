@@ -59,13 +59,14 @@
 			this.$EventBus.$on('diaryChanged', () => {
 				this.loadData(false);
 			});
-			this.$EventBus.$on('theCpChanged', () => {
+			this.$EventBus.$on('theUserChanged', () => {
+				this.user = this.$userKeeper.get();
 				this.loadData(false);
 			});
 		},
 		beforeDestroy() {
 			this.$EventBus.$off('diaryChanged');
-			this.$EventBus.$off('theCpChanged');
+			this.$EventBus.$off('theUserChanged');
 		},
 		methods: {
 			getDay(date) {

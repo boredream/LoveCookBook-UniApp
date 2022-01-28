@@ -73,7 +73,7 @@
 			onComplete(msg) {
 				userKeeper.save(this.user);
 				this.$toast(msg);
-				this.$EventBus.$emit("theUserChanged");
+				this.$EventBus.$emit("theUserInfoChanged");
 				uni.navigateBack();
 			},
 		}

@@ -20,7 +20,7 @@ function checkLogin() {
 			cancelText: "暂不登录",
 			success: (res) => {
 				if (res.confirm) {
-					uni.reLaunch({
+					uni.navigateTo({
 						url: "../login/login"
 					})
 				}

@@ -32,6 +32,7 @@
 <script>
 	import userKeeper from "../../utils/user_keeper.js";
 	import tokenKeeper from "../../utils/token_keeper.js";
+	import imageUtil from "../../utils/image_util.js";
 	
 	export default {
 		data() {
@@ -45,15 +46,16 @@
 			this.getUserInfoFromLocal();
 		},
 		mounted() {
-			this.$EventBus.$on('theUserChanged', () => {
+			this.$EventBus.$on('theUserInfoChanged', () => {
 				this.getUserInfoFromLocal();
 			});
-			this.$EventBus.$on('theCpChanged', () => {
+			this.$EventBus.$on('theUserChanged', () => {
 				this.getUserInfoFromLocal();
 			});
 		},
 		beforeDestroy() {
-			this.$EventBus.$off('theCpChanged');
+			this.$EventBus.$off('theUserInfoChanged');
+			this.$EventBus.$off('theUserChanged');
 		},
 		methods: {
 			getUserInfoFromLocal() {
@@ -103,7 +105,7 @@
 					onSuccess: (res) => {
 						this.user.cpUser = null;
 						userKeeper.save(this.user);
-						this.$EventBus.$emit("theCpChanged");
+						this.$EventBus.$emit("theUserChanged");
 					}
 				});
 			},
@@ -114,7 +116,6 @@
 			},
 			feedBack() {
 				if(!this.$userKeeper.checkLogin()) return;
-				
 				uni.navigateTo({
 					url: "../feedback/feedback",
 				})
@@ -123,9 +124,10 @@
 				console.log("logout");
 				userKeeper.clear();
 				tokenKeeper.clear();
-				uni.reLaunch({
+				uni.navigateTo({
 					url: "../login/login",
 				});
+				this.$EventBus.$emit("theUserChanged");
 			},
 		}
 	}

@@ -67,7 +67,7 @@
 						userKeeper.save(this.user);
 						
 						this.$toast("绑定成功");
-						this.$EventBus.$emit("theCpChanged");
+						this.$EventBus.$emit("theUserChanged");
 						uni.navigateBack();
 					} 
 				});
