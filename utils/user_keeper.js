@@ -17,7 +17,7 @@ function checkLogin() {
 		uni.showModal({
 			content: "需要登录后才能记录恋爱资料",
 			confirmText: "前往登录",
-			cancelText: "暂不登录",
+			cancelText: "继续体验",
 			success: (res) => {
 				if (res.confirm) {
 					uni.navigateTo({

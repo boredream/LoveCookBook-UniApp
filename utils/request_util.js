@@ -6,8 +6,8 @@ export default {
 	del
 }
 
-// const HOST = 'https://www.papikoala.cn/api/';
-const HOST = 'http://localhost:8080/api/';
+const HOST = 'https://www.papikoala.cn/api/';
+// const HOST = 'http://localhost:8080/api/';
 
 import tokenUtil from "./token_keeper.js"
 

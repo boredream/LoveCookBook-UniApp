@@ -97,7 +97,7 @@
 			setTogetherDays() {
 				if (this.user && this.user.cpTogetherDate) {
 					this.togatherTitle = "我们已恋爱";
-					var date = dateUtil.str2date(cpTogetherDate);
+					var date = dateUtil.str2date(this.user.cpTogetherDate);
 					var days = dateUtil.calculateDayDiff(new Date(), date);
 					this.togatherDays = days.toString();
 					this.togatherDate = Number(date);
