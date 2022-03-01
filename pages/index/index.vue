@@ -38,6 +38,10 @@
 						console.log("auto login success " + JSON.stringify(res));
 						userKeeper.save(res);
 						this.route2main();
+					},
+					onFail: (error) => {
+						console.log("auto login error " + JSON.stringify(error));
+						this.route2main();
 					}
 				});
 			}
