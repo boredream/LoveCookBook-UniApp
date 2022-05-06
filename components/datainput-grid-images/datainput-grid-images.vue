@@ -4,6 +4,7 @@
 		@delete="deletePic" 
 		sizeType="['compressed']" 
 		maxCount="9" 
+		multiple
 		:fileList="imageList"
 		@afterRead="afterRead">
 	</u-upload>
