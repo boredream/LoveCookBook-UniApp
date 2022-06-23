@@ -13,17 +13,22 @@
 			<view class="textCaption">{{cpBindAction}}</view>
 			<image v-if="cpUserAvatar" class="cpAvatar" mode="aspectFill" :src="cpUserAvatar" />
 		</view>
-		<view style="margin-left: 20px;" class="dividerHor"></view>
+		<view class="dividerHor"></view>
 
 		<view class="itemContainer llHor paddingHor" @click="aboutUs">
 			<view class="textBody grow">关于我们</view>
 		</view>
-		<view style="margin-left: 20px;" class="dividerHor"></view>
+		<view class="dividerHor"></view>
+
+		<view class="itemContainer llHor paddingHor" open-type="share">
+			<view class="textBody grow">推荐给好友</view>
+		</view>
+		<view class="dividerHor"></view>
 
 		<view class="itemContainer llHor paddingHor" @click="feedBack">
 			<view class="textBody grow">反馈</view>
 		</view>
-		<view style="margin-left: 20px;" class="dividerHor"></view>
+		<view class="dividerHor"></view>
 
 		<button v-if="user" class="btnPrimary btnLogout" @click="logout">退出登录</button>
 	</view>
@@ -35,6 +40,14 @@
 	import imageUtil from "../../utils/image_util.js";
 	
 	export default {
+		onShareAppMessage(res) {
+			// https://uniapp.dcloud.io/api/plugins/share.html#%E5%88%86%E4%BA%AB
+			return {
+			  title: '恋爱手册',
+			  path: '/pages/index/index',
+			  imageUrl: '../../static/img_share.png'
+			}
+		},
 		data() {
 			return {
 				user: {},

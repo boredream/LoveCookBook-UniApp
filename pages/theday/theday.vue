@@ -47,6 +47,14 @@
 	import imageUtil from "../../utils/image_util.js";
 
 	export default {
+		onShareAppMessage(res) {
+			// https://uniapp.dcloud.io/api/plugins/share.html#%E5%88%86%E4%BA%AB
+			return {
+			  title: '恋爱手册',
+			  path: '/pages/index/index',
+			  imageUrl: '../../static/img_share.png'
+			}
+		},
 		onLoad() {
 			this.user = this.$userKeeper.get();
 			this.setHeadInfo();
