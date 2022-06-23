@@ -13,7 +13,7 @@ function get() {
 }
 
 function save(info) {
-	localStorageUtil.save(storageKey, info);
+	return localStorageUtil.saveSync(storageKey, info);
 }
 
 function clear() {

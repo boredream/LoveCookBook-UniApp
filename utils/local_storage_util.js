@@ -1,5 +1,6 @@
 export default {
 	save,
+	saveSync,
 	get,
 	clear,
 }
@@ -13,6 +14,15 @@ function save(storageKey, info) {
 		key: storageKey,
 		data: info
 	});
+}
+
+function saveSync(storageKey, info) {
+	try {
+		uni.setStorageSync(storageKey, info);
+		return true;
+	} catch (e) {
+		return false;
+	}
 }
 
 function clear(storageKey) {

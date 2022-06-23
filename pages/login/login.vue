@@ -38,10 +38,6 @@
 		},
 		methods: {
 			route2main() {
-				// uni.switchTab({
-				// 	url: "../theday/theday",
-				// });
-				
 				// 可以体验进入，所以一般都是其它页面过来的，直接关闭
 				uni.navigateBack();
 			},
@@ -118,20 +114,19 @@
 						"code": this.form.password,
 					},
 					onSuccess: (token) => {
-						tokenKeeper.save(token);
-						this.getUserInfo();
 						console.log("login success = " + token);
+						var success = tokenKeeper.save(token);
+						console.log("login save token success = " + success);
+						if(success) {
+							this.getUserInfo();
+						} else {
+							uni.showToast({
+								title: "登录失败 token save error",
+								icon: "none"
+							});
+						}
 					}
 				});
-				// this.$request.post({
-				// 	path: "user/login",
-				// 	data: this.form,
-				// 	onSuccess: (token) => {
-				// 		tokenKeeper.save(token);
-				// 		this.getUserInfo();
-				// 		console.log("login success = " + token);
-				// 	}
-				// });
 			},
 			appLoginWx() {
 				// #ifdef MP-WEIXIN
@@ -147,16 +142,23 @@
 								provider: 'weixin',
 								success: (authCode) => {
 									// step3. 通过code获取微信openId，并完成登录/注册，最终生成token
-									console.log("step3. 通过code获取微信openId，并完成登录/注册，最终生成token " +
-										authCode);
+									console.log("step3. 通过code获取微信openId，并完成登录/注册，最终生成token " + authCode);
 									this.$request.post({
 										path: "user/wxlogin",
 										data: authCode,
 										onSuccess: (token) => {
 											console.log("wx login success = " + token);
-											tokenKeeper.save(token);
+											var success = tokenKeeper.save(token);
+											console.log("wx login save token success = " + success);
 											// step4. 获取用户信息，完成登录流程，跳转页面
-											this.getUserInfo();
+											if(success) {
+												this.getUserInfo();
+											} else {
+												uni.showToast({
+													title: "登录失败 token save error",
+													icon: "none"
+												});
+											}
 										}
 									});
 								},
