@@ -46,7 +46,9 @@
 			},
 			// 新增图片
 			afterRead(event) {
-				this.imageList.push(event.file);
+				for (let i = 0; i < event.file.length; i++) {
+					this.imageList.push(event.file[i]);
+				}
 				this.onImageChanged();
 			},
 			onImageChanged() {
